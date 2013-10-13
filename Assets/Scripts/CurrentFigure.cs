@@ -98,7 +98,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener {
 			return true;
 		} else {
 			if (connect) { 
-				core.Connect();
+				figure.Connect();
 				figure.Init(0, startY);
 			}
 		}
