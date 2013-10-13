@@ -98,7 +98,8 @@ public class TouchController : MonoBehaviour
 			core.RotateCW();
 		} else if (pos.y > y1) {
 			// menu
-			core.Reinit();
+			//core.Reinit();
+			Application.LoadLevel("mainMenu");
 		} else {
 			currentFigure.RotateCW();
 		}

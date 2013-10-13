@@ -5,11 +5,23 @@ using System.Collections.Generic;
 public class Core : MonoBehaviour {
 	
 	private Figure figure;
+	private int score = 0;
 	private Vector2[][] rings;
 	private int[,] pinMap = new int[41,41];
 	
 	public Figure currentFigure;
+
+	/* Return ULLabel component of Score*/
+	private UILabel getScoreLabel() {
+		return GameObject.Find("Score").GetComponent<UILabel>();
+	}
 	
+	/* Add value to score*/
+	public void addToScore(int value) {
+		score += value;
+		
+		getScoreLabel().text = "Score: " + score.ToString();
+	}
 	
 	// Use this for initialization
 	void Start () {
@@ -40,7 +52,7 @@ public class Core : MonoBehaviour {
 	{
 		figure.Reinit();
 	}
-	
+
 	public void RotateCW()
 	{
 		if (!figure.isCollisionRotateCW(currentFigure)) {
@@ -123,6 +135,8 @@ public class Core : MonoBehaviour {
 		foreach (Pin pin in removePins) {
 			Destroy(pin.gameObject);
 		}
+		
+		addToScore(removePins.Count);
 	}
 	
 	private int RingNum(Vector2 pos)

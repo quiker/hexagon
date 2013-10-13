@@ -35,7 +35,8 @@ public class KeyboardController : MonoBehaviour {
 			currentFigure.RotateCW();
 		}
 		if (Input.GetKeyDown(KeyCode.R)) {
-			core.Reinit();
+			//core.Reinit();
+			Application.LoadLevel("mainMenu");
 		}
 	}
 }
