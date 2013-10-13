@@ -23,6 +23,10 @@ public class Core : MonoBehaviour {
 		
 	}
 	
+	public void Connect(Figure _figure) {
+		_figure.ConnectTo(figure);
+	}
+	
 	public void RotateCW()
 	{
 		if (!figure.isCollisionRotateCW(currentFigure)) {

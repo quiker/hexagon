@@ -266,17 +266,15 @@ public class Figure : MonoBehaviour {
 		return false;
 	}
 	
-	public void Connect()
+	public void ConnectTo(Figure figure)
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
 		foreach (Pin pin in pins) {
-			pin.position = pin.position + position - coreFigure.position;
-			pin.figurePosition = coreFigure.position;
+			pin.position = pin.position + position - figure.position;
+			pin.figurePosition = figure.position;
 		}
 		
-		int arrayOriginalSize = coreFigure.pins.Length;
-		Array.Resize< Pin >(ref coreFigure.pins, coreFigure.pins.Length + pins.Length);
-		Array.Copy(pins, 0, coreFigure.pins, arrayOriginalSize, pins.Length);
+		int arrayOriginalSize = figure.pins.Length;
+		Array.Resize< Pin >(ref figure.pins, figure.pins.Length + pins.Length);
+		Array.Copy(pins, 0, figure.pins, arrayOriginalSize, pins.Length);
 	}
 }

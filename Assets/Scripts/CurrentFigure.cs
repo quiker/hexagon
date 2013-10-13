@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CurrentFigure : MonoBehaviour, Ticker.TickListener {
+public class CurrentFigure : MonoBehaviour, Ticker.TickListener
+{
+	
+	public Core core;
 	
 	private Figure figure;
 	private int startY = 20;
@@ -37,7 +40,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener {
 	public bool MoveDown()
 	{
 		if (figure.isCollisionDown()) {
-			figure.Connect();
+			core.Connect(figure);
 			figure.Init(0, startY);
 			return false;
 		} else {
@@ -75,7 +78,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener {
 			return true;
 		} else {
 			if (connect) { 
-				figure.Connect();
+				core.Connect(figure);
 				figure.Init(0, startY);
 			}
 		}
@@ -98,7 +101,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener {
 			return true;
 		} else {
 			if (connect) { 
-				figure.Connect();
+				core.Connect(figure);
 				figure.Init(0, startY);
 			}
 		}
