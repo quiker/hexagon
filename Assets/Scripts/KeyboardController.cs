@@ -38,5 +38,11 @@ public class KeyboardController : MonoBehaviour {
 			//core.Reinit();
 			Application.LoadLevel("mainMenu");
 		}
+		
+		if (Application.platform == RuntimePlatform.Android) {
+            if (Input.GetKey(KeyCode.Escape)){
+				Application.LoadLevel("mainMenu");
+            }
+		}
 	}
 }
