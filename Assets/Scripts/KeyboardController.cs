@@ -34,22 +34,5 @@ public class KeyboardController : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.E)) {
 			currentFigure.RotateCW();
 		}
-		if (Input.GetKeyDown(KeyCode.R)) {
-			//core.Reinit();
-			Application.LoadLevel("mainMenu");
-		}
-		
-		if (Application.platform == RuntimePlatform.Android) {
-            if (Input.GetKey(KeyCode.Escape)){
-				Application.LoadLevel("mainMenu");
-            }
-		}
-		
-		
-		if (Input.GetKeyDown(KeyCode.T)) {
-			core.Reinit();
-		}
-		
-		
 	}
 }

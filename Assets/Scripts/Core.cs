@@ -11,18 +11,17 @@ public class Core : MonoBehaviour {
 	private int[,] pinMap = new int[41,41];
 	
 	public Figure currentFigure;
+	public UILabel scoreLabel = null;
 	public LevelFactory levelFactory;
 
-	/* Return ULLabel component of Score*/
-	private UILabel getScoreLabel() {
-		return GameObject.Find("Score").GetComponent<UILabel>();
-	}
 	
 	/* Add value to score*/
 	public void addToScore(int value) {
 		score += value;
 		
-		getScoreLabel().text = "Score: " + score.ToString();
+		if (scoreLabel != null) {
+			scoreLabel.text = "Score: " + score.ToString();
+		}
 	}
 	
 	// Use this for initialization
@@ -177,7 +176,7 @@ public class Core : MonoBehaviour {
 				}
 			}
 		}
-		
+
 		figure.UpdatePosition();
 		
 		addToScore(removePins.Count);
