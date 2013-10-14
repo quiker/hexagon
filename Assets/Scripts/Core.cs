@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -140,30 +141,31 @@ public class Core : MonoBehaviour {
 		
 		// move up rings
 		foreach(int ring in foundRingNumsSet) {
-			foreach (Pin pin in _figure.pins) {
+			for (int pn = 0; pn < figure.pins.Length; pn++) {
+				Pin pin = figure.pins[pn];
 				if (pin.position.x >= -ring &&
 				    pin.position.y > pin.position.x + ring) {
-					pin.position = pin.position + new Vector2(1, 0);
+					figure.pins[pn].position = pin.position + new Vector2(1, 0);
 				}
 				if (pin.position.y <= pin.position.x + ring &&
 				    pin.position.y > ring) {
-					pin.position = pin.position + new Vector2(0, -1);
+					figure.pins[pn].position = pin.position + new Vector2(0, -1);
 				}
 				if (pin.position.x > ring &&
 				    pin.position.y <= ring) {
-					pin.position = pin.position + new Vector2(-1, -1);
+					figure.pins[pn].position = pin.position + new Vector2(-1, -1);
 				}
 				if (pin.position.x <= ring &&
 				    pin.position.y <= pin.position.x - ring) {
-					pin.position = pin.position + new Vector2(-1, 0);
+					figure.pins[pn].position = pin.position + new Vector2(-1, 0);
 				}
 				if (pin.position.y < -ring &&
 				    pin.position.y >= pin.position.x - ring) {
-					pin.position = pin.position + new Vector2(0, 1);
+					figure.pins[pn].position = pin.position + new Vector2(0, 1);
 				}
 				if (pin.position.y >= -ring &&
 				    pin.position.x < -ring) {
-					pin.position = pin.position + new Vector2(1, 1);
+					figure.pins[pn].position = pin.position + new Vector2(1, 1);
 				}
 			}
 		}
