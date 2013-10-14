@@ -7,13 +7,11 @@ public class Figure : MonoBehaviour {
 	public Pin[] pins;
 	
 	public Core core;
-	public FigureFactory figureFactory;	
 	public Vector2 position;
 	
 	// Use this for initialization
 	public void Init (int x, int y) {
 		position = new Vector2(x, y);
-		pins = figureFactory.GetFigure(position, core);
 	}
 	
 	public void Reinit () {

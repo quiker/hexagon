@@ -151,6 +151,28 @@ public class FigureFactory : MonoBehaviour {
 		
 		return pins;
 	}
+	
+	public Pin[] GetTestLevel(Vector2 position, Core core)
+	{
+		Pin[] pins = new Pin[121];
+		
+		for (int i = 0; i < 121; i++) {
+			GameObject pinGO = Instantiate(pinPrefab) as GameObject;
+			Pin pin = pinGO.GetComponent("Pin") as Pin;
+			
+			pin.color = 1;
+			pin.position = new Vector2(
+				i/11 - 5,
+				i%11 - 5
+			);
+			pin.core = core;
+			pin.figurePosition = position;
+			pin.UpdatePosition();
+		    pins[i] = pin;
+		}
+		
+		return pins;
+	}
 		
 	// Use this for initialization
 	void Start () {

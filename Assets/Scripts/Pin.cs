@@ -5,12 +5,13 @@ public class Pin : MonoBehaviour {
 	
 	public Core core;
 	public int color;
+
 	public Vector2 position;
 	public Vector2 figurePosition;
 	
 	private Vector3 newPosition;
 	
-	private Color[] colors = {Color.white, Color.red, Color.green, Color.blue, Color.yellow};
+	private Color[] colors = {Color.white, Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.grey};
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,12 @@ public class Pin : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+	
+	public void SetColor(int _color)
+	{
+		color = _color;
+		transform.GetChild(0).renderer.material.color = colors[color];	
 	}
 	
 	public void UpdatePosition() {

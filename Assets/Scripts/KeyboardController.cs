@@ -44,5 +44,12 @@ public class KeyboardController : MonoBehaviour {
 				Application.LoadLevel("mainMenu");
             }
 		}
+		
+		
+		if (Input.GetKeyDown(KeyCode.T)) {
+			core.Reinit();
+		}
+		
+		
 	}
 }

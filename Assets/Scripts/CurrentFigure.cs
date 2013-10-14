@@ -5,6 +5,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 {
 	
 	public Core core;
+	public FigureFactory figureFactory;
 	
 	private Figure figure;
 	private int startY = 20;
@@ -14,6 +15,13 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 	void Start () {
 		figure = GetComponent("Figure") as Figure;
 		figure.Init(0, startY);
+		figure.pins = figureFactory.GetFigure(figure.position, core);
+	}
+	
+	void NewFigure()
+	{
+		figure.Init(0, startY);
+		figure.pins = figureFactory.GetFigure(figure.position, core);
 	}
 	
 	// Update is called once per frame
@@ -41,7 +49,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 	{
 		if (figure.isCollisionDown()) {
 			core.Connect(figure);
-			figure.Init(0, startY);
+			NewFigure();
 			return false;
 		} else {
 			figure.MoveDown();
@@ -79,7 +87,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 		} else {
 			if (connect) { 
 				core.Connect(figure);
-				figure.Init(0, startY);
+				NewFigure();
 			}
 		}
 		return false;
@@ -102,7 +110,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 		} else {
 			if (connect) { 
 				core.Connect(figure);
-				figure.Init(0, startY);
+				NewFigure();
 			}
 		}
 		return false;
