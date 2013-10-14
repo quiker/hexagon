@@ -143,26 +143,32 @@ public class Core : MonoBehaviour {
 		foreach(int ring in foundRingNumsSet) {
 			for (int pn = 0; pn < figure.pins.Length; pn++) {
 				Pin pin = figure.pins[pn];
+				// up
 				if (pin.position.x >= -ring &&
 				    pin.position.y > pin.position.x + ring) {
 					figure.pins[pn].position = pin.position + new Vector2(1, 0);
 				}
+				// right up
 				if (pin.position.y <= pin.position.x + ring &&
 				    pin.position.y > ring) {
 					figure.pins[pn].position = pin.position + new Vector2(0, -1);
 				}
+				// right down
 				if (pin.position.x > ring &&
 				    pin.position.y <= ring) {
 					figure.pins[pn].position = pin.position + new Vector2(-1, -1);
 				}
+				// down
 				if (pin.position.x <= ring &&
 				    pin.position.y <= pin.position.x - ring) {
 					figure.pins[pn].position = pin.position + new Vector2(-1, 0);
 				}
+				// left down
 				if (pin.position.y < -ring &&
 				    pin.position.y >= pin.position.x - ring) {
 					figure.pins[pn].position = pin.position + new Vector2(0, 1);
 				}
+				// left up
 				if (pin.position.y >= -ring &&
 				    pin.position.x < -ring) {
 					figure.pins[pn].position = pin.position + new Vector2(1, 1);
