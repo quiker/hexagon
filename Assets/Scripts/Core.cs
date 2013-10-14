@@ -93,6 +93,8 @@ public class Core : MonoBehaviour {
 		}
 		int [] ringNums = new int[ringNumsSet.Count];
 		ringNumsSet.CopyTo(ringNums);
+		Array.Sort(ringNums);
+		Array.Reverse(ringNums);
 		
 		// search rings
 		HashSet<int> foundRingNumsSet = new HashSet<int>();
@@ -136,6 +138,36 @@ public class Core : MonoBehaviour {
 			Destroy(pin.gameObject);
 		}
 		
+		// move up rings
+		foreach(int ring in foundRingNumsSet) {
+			foreach (Pin pin in _figure.pins) {
+				if (pin.position.x >= -ring &&
+				    pin.position.y > pin.position.x + ring) {
+					pin.position = pin.position + new Vector2(1, 0);
+				}
+				if (pin.position.y <= pin.position.x + ring &&
+				    pin.position.y > ring) {
+					pin.position = pin.position + new Vector2(0, -1);
+				}
+				if (pin.position.x > ring &&
+				    pin.position.y <= ring) {
+					pin.position = pin.position + new Vector2(-1, -1);
+				}
+				if (pin.position.x <= ring &&
+				    pin.position.y <= pin.position.x - ring) {
+					pin.position = pin.position + new Vector2(-1, 0);
+				}
+				if (pin.position.y < -ring &&
+				    pin.position.y >= pin.position.x - ring) {
+					pin.position = pin.position + new Vector2(0, 1);
+				}
+				if (pin.position.y >= -ring &&
+				    pin.position.x < -ring) {
+					pin.position = pin.position + new Vector2(1, 1);
+				}
+			}
+		}
+
 		addToScore(removePins.Count);
 	}
 	
