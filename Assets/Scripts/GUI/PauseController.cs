@@ -2,7 +2,6 @@
 using System.Collections;
 using System;
 
-
 public class PauseController : MonoBehaviour {
 	public UIPanel pausePanel = null;
 	public Core core = null;
@@ -27,8 +26,8 @@ public class PauseController : MonoBehaviour {
 		Application.LoadLevel("mainMenu");
 	}
 	
-	public void onSoundClick() {
-		
+	public void OnMuteClick() {
+		SettingsContainer.SetMusicFlag(songCheckbox.isChecked);
 	}
 	
 	public void onRestartGameClick() {
@@ -43,7 +42,12 @@ public class PauseController : MonoBehaviour {
 	// Set state pause/resume
 	private void setPause(bool itPause) {
 		if (pausePanel != null) {
+<<<<<<< HEAD:Assets/Scripts/PauseController.cs
 			pausePanel.gameObject.SetActive(itPause);
+=======
+			pausePanel.enabled = itPause;
+			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
+>>>>>>> 6d62fe0... Scripts folders:Assets/Scripts/GUI/PauseController.cs
 			Time.timeScale = (itPause ? 0 : 1);
 		}else{
 			throw new Exception("Pause panel is null");
@@ -60,9 +64,7 @@ public class PauseController : MonoBehaviour {
 	
 	public void resume() {
 		if (themeSong != null) {
-			if (songCheckbox.isChecked) {
-				themeSong.play();
-			}
+			themeSong.play();
 		}
 		
 		setPause(false);
