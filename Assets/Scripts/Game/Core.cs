@@ -32,8 +32,7 @@ public class Core : MonoBehaviour {
 	void Start () {
 		figure = GetComponent("Figure") as Figure;
 		figure.Init(0, 0);
-		figure.pins = levelFactory.GetLevel(1, this);
-		figure.UpdatePosition();
+		Reinit();
 		
 		// init ring coordinates
 		rings = new Vector2[15][]; 
@@ -60,6 +59,7 @@ public class Core : MonoBehaviour {
 		figure.Reinit();
 		figure.pins = levelFactory.GetLevel(1, this);
 		figure.UpdatePosition();
+		setScore(0);
 	}
 
 	public void RotateCW()

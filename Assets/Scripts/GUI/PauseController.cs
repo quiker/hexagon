@@ -7,6 +7,7 @@ public class PauseController : MonoBehaviour {
 	public Core core = null;
 	public MainThemeSong themeSong = null;
 	public UICheckbox songCheckbox = null;
+	public TouchController touchController = null;
 	
 	void Start() {
 		songCheckbox.startsChecked = SettingsContainer.GetMusicFlag();
@@ -47,6 +48,11 @@ public class PauseController : MonoBehaviour {
 		if (pausePanel != null) {
 			pausePanel.gameObject.SetActive(itPause);
 			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
+			
+			if (touchController != null) {
+				touchController.gameObject.SetActive(!itPause);
+			}
+			
 			Time.timeScale = (itPause ? 0 : 1);
 		} else {
 			throw new Exception("Pause panel is null");
