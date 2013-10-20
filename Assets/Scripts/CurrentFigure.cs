@@ -14,14 +14,14 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 	// Use this for initialization
 	void Start () {
 		figure = GetComponent("Figure") as Figure;
-		figure.Init(0, startY);
-		figure.pins = figureFactory.GetFigure(figure.position, core);
+		NewFigure();
 	}
 	
 	void NewFigure()
 	{
 		figure.Init(0, startY);
-		figure.pins = figureFactory.GetFigure(figure.position, core);
+		figure.pins = figureFactory.GetFigure(transform.FindChild("PinWrapper"));
+		figure.UpdatePosition();
 	}
 	
 	// Update is called once per frame

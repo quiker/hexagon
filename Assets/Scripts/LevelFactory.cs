@@ -17,6 +17,7 @@ public class LevelFactory : MonoBehaviour {
 		
 		for (int i = 0; i < template.Length / 3; i++) {
 			GameObject pinGO = Instantiate(pinPrefab) as GameObject;
+			pinGO.transform.parent = core.transform.FindChild("PinWrapper");
 			Pin pin = pinGO.GetComponent("Pin") as Pin;
 			
 			pin.color = template[i*3+2];
@@ -24,9 +25,7 @@ public class LevelFactory : MonoBehaviour {
 				template[i*3],
 				template[i*3+1]
 			);
-			pin.core = core;
-			pin.figurePosition = new Vector2(0, 0);
-			pin.UpdatePosition();
+			
 		    pins[i] = pin;
 		}
 		
@@ -39,6 +38,7 @@ public class LevelFactory : MonoBehaviour {
 		
 		for (int i = 0; i < 121; i++) {
 			GameObject pinGO = Instantiate(pinPrefab) as GameObject;
+			pinGO.transform.parent = core.transform.FindChild("PinWrapper");
 			Pin pin = pinGO.GetComponent("Pin") as Pin;
 			
 			pin.color = 0;
@@ -46,9 +46,7 @@ public class LevelFactory : MonoBehaviour {
 				i/11 - 5,
 				i%11 - 5
 			);
-			pin.core = core;
-			pin.figurePosition = new Vector2(0, 0);
-			pin.UpdatePosition();
+			
 		    pins[i] = pin;
 		}
 		

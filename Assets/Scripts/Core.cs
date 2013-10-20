@@ -29,6 +29,7 @@ public class Core : MonoBehaviour {
 		figure = GetComponent("Figure") as Figure;
 		figure.Init(0, 0);
 		figure.pins = levelFactory.GetLevel(1, this);
+		figure.UpdatePosition();
 		
 		// init ring coordinates
 		rings = new Vector2[15][]; 
@@ -91,7 +92,7 @@ public class Core : MonoBehaviour {
 		// figure pins rings
 		HashSet<int> ringNumsSet = new HashSet<int>();
 		foreach (Pin pin in _figure.pins) {
-			ringNumsSet.Add(RingNum(pin.position + pin.figurePosition));
+			ringNumsSet.Add(RingNum(pin.position));
 		}
 		int [] ringNums = new int[ringNumsSet.Count];
 		ringNumsSet.CopyTo(ringNums);

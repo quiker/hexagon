@@ -20,4 +20,14 @@ public class HexVector2 {
 		
 		return newPos;
 	}
+	
+	public static Vector3 ConvertHexVector(Vector2 pos)
+	{
+		Vector3 hexOX = new Vector3(0.866025f, -0.5f, 0f);
+		Vector3 hexOY = new Vector3(0f, 1f, 0f);
+		float scale = 36f;
+		
+		return hexOX * scale * pos.x + hexOY * scale * pos.y;
+	}
+	
 }

@@ -23,8 +23,8 @@ public class Figure : MonoBehaviour {
 	
 	public void UpdatePosition()
 	{
+		transform.localPosition = HexVector2.ConvertHexVector(position);
 		foreach (Pin pin in pins) {
-			pin.figurePosition = position;
 			pin.UpdatePosition();
 		}
 	}
@@ -37,50 +37,64 @@ public class Figure : MonoBehaviour {
 	
 	public void MoveDown()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		position.y --;
-		UpdatePosition();
+		pw.Play("TickSlideDown");
 	}
 	
 	public void MoveRightUp()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		position.x ++;
 		position.y ++;
-		UpdatePosition();
+		pw.Play("TickSlideRightUp");
 	}
 	
 	public void MoveRightDown()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		position.x ++;
-		UpdatePosition();
+		pw.Play("TickSlideRightDown");
 	}
 	
 	public void MoveLeftUp()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		position.x --;
-		UpdatePosition();
+		pw.Play("TickSlideLeftUp");
 	}
 	
 	public void MoveLeftDown()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		position.y --;
 		position.x --;
-		UpdatePosition();
+		pw.Play("TickSlideLeftDown");
 	}
 	
 	public void RotateCCW()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		foreach (Pin pin in pins) {
 			pin.position = HexVector2.RotateCCW(pin.position);
-			pin.UpdatePosition();
 		}
+		pw.Play("RotateCCW");
 	}
 	
 	public void RotateCW()
 	{
+		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
+		pw.StopAll();
 		foreach (Pin pin in pins) {
 			pin.position = HexVector2.RotateCW(pin.position);
-			pin.UpdatePosition();
 		}
+		pw.Play("RotateCW");
 	}
 	
 	public bool IsFilled(Vector2 pos)
@@ -268,7 +282,7 @@ public class Figure : MonoBehaviour {
 	{
 		foreach (Pin pin in pins) {
 			pin.position = pin.position + position - figure.position;
-			pin.figurePosition = figure.position;
+			pin.transform.parent = core.transform.FindChild("PinWrapper");
 		}
 		
 		int arrayOriginalSize = figure.pins.Length;
