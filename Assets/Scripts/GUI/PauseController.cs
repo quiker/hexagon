@@ -42,12 +42,8 @@ public class PauseController : MonoBehaviour {
 	// Set state pause/resume
 	private void setPause(bool itPause) {
 		if (pausePanel != null) {
-<<<<<<< HEAD:Assets/Scripts/PauseController.cs
 			pausePanel.gameObject.SetActive(itPause);
-=======
-			pausePanel.enabled = itPause;
 			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
->>>>>>> 6d62fe0... Scripts folders:Assets/Scripts/GUI/PauseController.cs
 			Time.timeScale = (itPause ? 0 : 1);
 		}else{
 			throw new Exception("Pause panel is null");
