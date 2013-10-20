@@ -12,15 +12,10 @@ public class PauseController : MonoBehaviour {
 	void Start() {
 		resume();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.R)) {
-			if ( isGamePaused() ) {
-				resume();
-			}else{
-				pause();
-			}
+		
+	public void onPauseClick() {
+		if ( !isGamePaused() ) {
+			pause();
 		}
 	}
 	
@@ -48,7 +43,7 @@ public class PauseController : MonoBehaviour {
 	// Set state pause/resume
 	private void setPause(bool itPause) {
 		if (pausePanel != null) {
-			pausePanel.enabled = itPause;
+			pausePanel.gameObject.SetActive(itPause);
 			Time.timeScale = (itPause ? 0 : 1);
 		}else{
 			throw new Exception("Pause panel is null");

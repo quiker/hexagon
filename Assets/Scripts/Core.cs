@@ -17,7 +17,11 @@ public class Core : MonoBehaviour {
 	
 	/* Add value to score*/
 	public void addToScore(int value) {
-		score += value;
+		setScore(score + value);
+	}
+	
+	public void setScore(int value) {
+		score = value;
 		
 		if (scoreLabel != null) {
 			scoreLabel.text = "Score: " + score.ToString();
@@ -54,6 +58,8 @@ public class Core : MonoBehaviour {
 	public void Reinit()
 	{
 		figure.Reinit();
+		figure.pins = levelFactory.GetLevel(1, this);
+		figure.UpdatePosition();
 	}
 
 	public void RotateCW()
