@@ -17,8 +17,8 @@ public class PauseMenuController : MonoBehaviour {
 		GameController.mainMenu();
 	}
 	
-	public void OnMuteClick(bool isChecked) {
-		SettingsContainer.SetMusicFlag(isChecked);
+	public void OnMuteClick() {
+		GameController.setMute(!songCheckbox.isChecked);
 	}
 	
 	public void onRestartGameClick() {

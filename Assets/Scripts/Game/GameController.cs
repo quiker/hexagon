@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-	private static int score = 0;
-	
+	private static int score = 0;	
 	
 	/* Add value to score*/
 	public static void addToScore(int value) {
@@ -39,6 +38,10 @@ public class GameController : MonoBehaviour {
 		}
 	}
 	
+	public static void quit() {
+		Application.Quit();
+	}
+	
 	public static bool isGamePaused() {
 		return PauseController.isGamePaused();
 	}
@@ -56,6 +59,16 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public static void failScreen() {
+		Time.timeScale = 0;
+		Debug.Log("LOOOSE!");
+	}
+	
+	public static void setMute(bool isMute) {
+		SettingsContainer.SetMusicFlag(!isMute);
+		
+		foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
+	    	gameObject.SendMessage("onGameMute", isMute, SendMessageOptions.DontRequireReceiver);
+		}
 	}
 	
 }
