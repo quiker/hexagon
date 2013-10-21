@@ -119,4 +119,12 @@ public class TouchController : MonoBehaviour
 	{
 		currentFigure.Tick();
 	}
+	
+	void onGamePause() {
+		gameObject.SetActive(false);
+	}
+	
+	void onGameResume() {
+		gameObject.SetActive(true);
+	}
 }

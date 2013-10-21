@@ -3,79 +3,27 @@ using System.Collections;
 using System;
 
 public class PauseController : MonoBehaviour {
-	public UIPanel pausePanel = null;
-	public Core core = null;
-	public MainThemeSong themeSong = null;
-	public UICheckbox songCheckbox = null;
-	public TouchController touchController = null;
-	
-	void Start() {
-		songCheckbox.startsChecked = SettingsContainer.GetMusicFlag();
-		resume();
-	}
-		
-	public void onPauseClick() {
+	public static void pause() {
 		if ( !isGamePaused() ) {
-			pause();
-		} else {
-			resume();
-		}
-	}
-	
-	public void onBackToGameClick() {
-		resume();
-	}
-	
-	public void onMainMenuClick() {
-		Application.LoadLevel("mainMenu");
-	}
-	
-	public void OnMuteClick() {
-		SettingsContainer.SetMusicFlag(songCheckbox.isChecked);
-	}
-	
-	public void onRestartGameClick() {
-		if (core != null) {
-			core.Reinit();
-			resume();
-		}else{
-			throw new Exception("Core is NULL!");
-		}
-	}
-	
-	// Set state pause/resume
-	private void setPause(bool itPause) {
-		if (pausePanel != null) {
-			pausePanel.gameObject.SetActive(itPause);
-			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
+			Time.timeScale = 0;
 			
-			if (touchController != null) {
-				touchController.gameObject.SetActive(!itPause);
-			}
+			foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
+		    	gameObject.SendMessage("onGamePaused", SendMessageOptions.DontRequireReceiver);
+    		}
+		}
+	}
+	
+	public static void resume() {
+		if ( isGamePaused() ) {
+			Time.timeScale = 1;
 			
-			Time.timeScale = (itPause ? 0 : 1);
-		} else {
-			throw new Exception("Pause panel is null");
+			foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
+		    	gameObject.SendMessage("onGameResumed", SendMessageOptions.DontRequireReceiver);
+    		}
 		}
 	}
 	
-	public void pause() {
-		if (themeSong != null) {
-			themeSong.pause();
-		}
-		
-		setPause(true);
-	}
-	
-	public void resume() {
-		if (themeSong != null) {
-			themeSong.play();
-		}
-		
-		setPause(false);
-	}
-	
-	public bool isGamePaused() {
+	public static bool isGamePaused() {
 		return (Time.timeScale == 0);
 	}
 	

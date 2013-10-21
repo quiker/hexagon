@@ -11,29 +11,11 @@ public class Core : MonoBehaviour {
 	private int[,] pinMap = new int[41,41];
 	
 	public Figure currentFigure;
-	public UILabel scoreLabel = null;
+	//public UILabel scoreLabel = null;
 	public LevelFactory levelFactory;
-
-	
-	/* Add value to score*/
-	public void addToScore(int value) {
-		setScore(score + value);
-	}
-	
-	public void setScore(int value) {
-		score = value;
-		
-		if (scoreLabel != null) {
-			scoreLabel.text = "Score: " + score.ToString();
-		}
-	}
 	
 	// Use this for initialization
 	void Start () {
-		figure = GetComponent("Figure") as Figure;
-		figure.Init(0, 0);
-		Reinit();
-		
 		// init ring coordinates
 		rings = new Vector2[15][]; 
 		
@@ -56,10 +38,11 @@ public class Core : MonoBehaviour {
 	
 	public void Reinit()
 	{
+		figure = GetComponent("Figure") as Figure;
+		figure.Init(0, 0);
 		figure.Reinit();
 		figure.pins = levelFactory.GetLevel(1, this);
 		figure.UpdatePosition();
-		setScore(0);
 	}
 
 	public void RotateCW()
@@ -186,7 +169,7 @@ public class Core : MonoBehaviour {
 
 		figure.UpdatePosition();
 		
-		addToScore(removePins.Count);
+		GameController.addToScore(removePins.Count);
 	}
 	
 	private int RingNum(Vector2 pos)
@@ -196,6 +179,10 @@ public class Core : MonoBehaviour {
 		} else {
 			return (int)(Mathf.Abs(pos.x) + Mathf.Abs(pos.y));
 		}
+	}
+	
+	void onGameRestarted() {
+		Reinit();
 	}
 	
 }

@@ -17,4 +17,12 @@ public class MainThemeSong : MonoBehaviour {
 			audio.Play();
 		}
 	}
+	
+	void onGamePaused() {
+		pause();
+	}
+	
+	void onGameResumed() {
+		play();
+	}
 }
