@@ -120,11 +120,15 @@ public class TouchController : MonoBehaviour
 		currentFigure.Tick();
 	}
 	
-	void onGamePause() {
-		gameObject.SetActive(false);
+	void onGamePaused() {
+		Debug.Log("Game paused!!");
+		enabled = false;
+		
+		//gameObject.SetActive(false);
 	}
 	
-	void onGameResume() {
-		gameObject.SetActive(true);
+	void onGameResumed() {
+		Debug.Log("Game resumed!!");
+		enabled = true;
 	}
 }

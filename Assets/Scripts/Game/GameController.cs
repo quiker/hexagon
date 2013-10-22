@@ -11,10 +11,7 @@ public class GameController : MonoBehaviour {
 	
 	public static void setScore(int value) {
 		score = value;
-		
-		foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
-	    	gameObject.SendMessage("onScoreUpdate", score, SendMessageOptions.DontRequireReceiver);
-		}
+		sendMessageToAllGameObjecs("onScoreUpdate", score);
 	}
 	
 	void Start() {
@@ -22,20 +19,23 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public static void resume() {		
-		PauseController.resume();
+		if ( isGamePaused() ) {
+			Time.timeScale = 1;
+			sendMessageToAllGameObjecs("onGameResumed", null);
+		}
 	}
 	
 	public static void pause() {
-		PauseController.pause();
+		if ( !isGamePaused() ) {
+			Time.timeScale = 0;
+			sendMessageToAllGameObjecs("onGamePaused", null);
+		}
 	}
 	
 	public static void restart() {
 		setScore(0);
 		resume();
-		
-		foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
-	    	gameObject.SendMessage("onGameRestarted", SendMessageOptions.DontRequireReceiver);
-		}
+		sendMessageToAllGameObjecs("onGameRestarted", null);
 	}
 	
 	public static void quit() {
@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public static bool isGamePaused() {
-		return PauseController.isGamePaused();
+		return (Time.timeScale == 0);
 	}
 	
 	public static void loadLevel(string level) {
@@ -65,9 +65,12 @@ public class GameController : MonoBehaviour {
 	
 	public static void setMute(bool isMute) {
 		SettingsContainer.SetMusicFlag(!isMute);
-		
+		sendMessageToAllGameObjecs("onGameMute", isMute);
+	}
+	
+	private static void sendMessageToAllGameObjecs(string methodName, object value) {
 		foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
-	    	gameObject.SendMessage("onGameMute", isMute, SendMessageOptions.DontRequireReceiver);
+	    	gameObject.SendMessage(methodName, value, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 	

@@ -6,7 +6,6 @@ public class MainThemeSong : MonoBehaviour {
 	public AudioClip[] playlist = null;
 	private int currentPlaylistIndex = -1;
 	
-	
 	void Update() {
 		if (SettingsContainer.GetMusicFlag()) {
 			if (playlist.Length > 0) {
@@ -34,9 +33,6 @@ public class MainThemeSong : MonoBehaviour {
 		playMusicByIndex(currentPlaylistIndex);
 	}
 	
-	void Awake() {
-		play();
-	}
 		
 	public void pause() {
 		audio.Pause();
