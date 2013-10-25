@@ -10,7 +10,11 @@ public class MainThemeSong : MonoBehaviour {
 		if (SettingsContainer.GetMusicFlag()) {
 			if (playlist.Length > 0) {
 				if(!audio.isPlaying) {
-					nextMusic();
+					if (!audio.clip != null) {
+						onClipComplete();
+					}else{
+						playClipByIndex(0);
+					}
 				}
 			}else{
 				throw new Exception("Playlist is empty");
@@ -18,19 +22,24 @@ public class MainThemeSong : MonoBehaviour {
 		}
 	}
 	
-	private void playMusicByIndex(int index) {
-		audio.clip = playlist[index];
+	private void playClipByIndex(int index) {
+		currentPlaylistIndex = index;
+		audio.clip = playlist[index];		
 		play();
 	}
 	
-	public void nextMusic() {
+	private void onClipComplete() {
+		nextClip();
+	}
+	
+	public void nextClip() {
 		if (currentPlaylistIndex == playlist.Length - 1) {
 			currentPlaylistIndex = 0;
 		}else{
 			currentPlaylistIndex ++;	
 		}
 		
-		playMusicByIndex(currentPlaylistIndex);
+		playClipByIndex(currentPlaylistIndex);
 	}
 	
 		
@@ -40,9 +49,7 @@ public class MainThemeSong : MonoBehaviour {
 	
 	
 	public void play() {
-		if (SettingsContainer.GetMusicFlag() && !audio.isPlaying) {
-			audio.Play();
-		}
+		audio.Play();
 	}
 	
 	void onGameResumed() {

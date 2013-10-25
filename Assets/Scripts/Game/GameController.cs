@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-	private static int score = 0;	
+	private static int score = 0;
+	private static string level = ""; 
 	
 	/* Add value to score*/
 	public static void addToScore(int value) {
@@ -46,8 +47,18 @@ public class GameController : MonoBehaviour {
 		return (Time.timeScale == 0);
 	}
 	
-	public static void loadLevel(string level) {
-		Application.LoadLevel(level);
+	public static void loadLevel(string levelName) {
+		/*
+		 * levelName - название левела. 
+		 * "hex" это название сцены.
+		 * Сам левел будет создаваться после загрузки сцены.
+		 * */
+		level = levelName;
+		Application.LoadLevel("hex");
+	}
+	
+	public static void levelChange() {
+		Application.LoadLevel("levelChange");
 	}
 	
 	public static void mainMenu() {
@@ -59,7 +70,7 @@ public class GameController : MonoBehaviour {
 	}
 	
 	public static void failScreen() {
-		Time.timeScale = 0;
+		//Time.timeScale = 0;
 		Debug.Log("LOOOSE!");
 	}
 	
