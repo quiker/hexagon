@@ -4,7 +4,7 @@ using System.Collections;
 public class MainMenuController : MonoBehaviour {
 
 	public void onNewGameClick() {
-		GameController.levelChange();
+		GameController.levelChangeScene();
 	}
 	
 	public void onQuitClick() {

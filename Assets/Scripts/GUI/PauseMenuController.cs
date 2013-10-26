@@ -14,7 +14,7 @@ public class PauseMenuController : MonoBehaviour {
 	}
 	
 	public void onMainMenuClick() {
-		GameController.mainMenu();
+		GameController.mainMenuScene();
 	}
 	
 	public void OnMuteClick() {
@@ -25,13 +25,13 @@ public class PauseMenuController : MonoBehaviour {
 		GameController.restart();
 	}
 	
-	void onGamePaused() {
+	
+	public void show() {
 		songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
 		pausePanel.gameObject.SetActive(true);
 	}
 	
-	
-	void onGameResumed() {
+	public void hide() {
 		pausePanel.gameObject.SetActive(false);
 	}
 }

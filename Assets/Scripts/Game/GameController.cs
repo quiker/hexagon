@@ -12,31 +12,27 @@ public class GameController : MonoBehaviour {
 	
 	public static void setScore(int value) {
 		score = value;
-		sendMessageToAllGameObjecs("onScoreUpdate", score);
-	}
-	
-	void Start() {
-		restart();
+		sendMessageToAllGameObjects("onScoreUpdate", score);
 	}
 	
 	public static void resume() {		
 		if ( isGamePaused() ) {
 			Time.timeScale = 1;
-			sendMessageToAllGameObjecs("onGameResumed", null);
+			sendMessageToAllGameObjects("onGameResumed", null);
 		}
 	}
 	
 	public static void pause() {
 		if ( !isGamePaused() ) {
 			Time.timeScale = 0;
-			sendMessageToAllGameObjecs("onGamePaused", null);
+			sendMessageToAllGameObjects("onGamePaused", null);
 		}
 	}
 	
 	public static void restart() {
 		setScore(0);
+		sendMessageToAllGameObjects("onLevelRestarted", level);
 		resume();
-		sendMessageToAllGameObjecs("onGameRestarted", null);
 	}
 	
 	public static void quit() {
@@ -57,16 +53,20 @@ public class GameController : MonoBehaviour {
 		Application.LoadLevel("hex");
 	}
 	
-	public static void levelChange() {
+	public static void levelChangeScene() {
 		Application.LoadLevel("levelChange");
 	}
 	
-	public static void mainMenu() {
+	public static void mainMenuScene() {
 		Application.LoadLevel("mainMenu");
 	}
 	
-	public static int getCurrentLevel() {
+	public static int getCurrentLevelIndex() {
 		return Application.loadedLevel;
+	}
+	
+	public static string getLevelName() {
+		return level;
 	}
 	
 	public static void failScreen() {
@@ -74,12 +74,19 @@ public class GameController : MonoBehaviour {
 		Debug.Log("LOOOSE!");
 	}
 	
-	public static void setMute(bool isMute) {
-		SettingsContainer.SetMusicFlag(!isMute);
-		sendMessageToAllGameObjecs("onGameMute", isMute);
+	public static void completeScreen() {
+		//Time.timeScale = 0;
+		Debug.Log("LOOOSE!");
 	}
 	
-	private static void sendMessageToAllGameObjecs(string methodName, object value) {
+	public static void setMute(bool isMute) {
+		if (SettingsContainer.GetMusicFlag() != !isMute) {
+			SettingsContainer.SetMusicFlag(!isMute);
+			sendMessageToAllGameObjects("onGameMute", isMute);
+		}
+	}
+	
+	private static void sendMessageToAllGameObjects(string methodName, object value) {
 		foreach (GameObject gameObject in FindObjectsOfType(typeof(GameObject))) {
 	    	gameObject.SendMessage(methodName, value, SendMessageOptions.DontRequireReceiver);
 		}

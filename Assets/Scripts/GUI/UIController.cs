@@ -13,7 +13,7 @@ public class UIController : MonoBehaviour {
 		}
 	}
 	
-	void onScoreUpdate(int score) {
+	public void updateScore(int score) {
 		if (scoreLabel != null) {
 			scoreLabel.text = "Score: " + score.ToString();
 		}

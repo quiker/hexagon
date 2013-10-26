@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class MainThemeSong : MonoBehaviour {
+public class AudioPlayer : MonoBehaviour {
 	public AudioClip[] playlist = null;
 	private int currentPlaylistIndex = -1;
 	
@@ -50,17 +50,5 @@ public class MainThemeSong : MonoBehaviour {
 	
 	public void play() {
 		audio.Play();
-	}
-	
-	void onGameResumed() {
-		play();
-	}
-	
-	void onGameMute(bool isMute) {
-		if (isMute) {
-			pause();
-		}else{
-			play();
-		}
 	}
 }
