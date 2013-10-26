@@ -9,8 +9,10 @@ public class LevelController : MonoBehaviour {
 	public AudioPlayer mainThemeSong = null;	
 	public KeyboardController keyboardController = null;
 	public TouchController touchController = null;
+	public bool musicOnPauseMenu = true;
 	
 	void Start() {
+		mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
 		updateLevel(GameController.getLevelName());
 	}
 	
@@ -32,21 +34,31 @@ public class LevelController : MonoBehaviour {
 	}	
 	
 	private void onLevelPaused(bool pauseState) {
+		/* show / hide pauseMenu*/
 		if (pauseMenu != null) {
-			if (pauseState == true) {
-				pauseMenu.show();
-			}else{
-				pauseMenu.hide();
-			}
+			pauseMenu.setShow(pauseState);
 		}
 		
+		/* On / Off keyboardController */
 		if (keyboardController != null) {
 			keyboardController.enabled = !pauseState;
 		}
 		
+		/* On / Off touchController */
 		if (touchController != null) {
 			touchController.enabled = !pauseState;
 		}
+		
+		/* On / Off music */
+		if (mainThemeSong != null) {
+			if (pauseState == true) {
+				if (SettingsContainer.GetMusicFlag()) {
+					mainThemeSong.setMute(!musicOnPauseMenu);
+				}
+			}else{
+				mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
+			}
+		}		
 	}
 	
 	private void onScoreUpdate(int score) {
@@ -57,10 +69,8 @@ public class LevelController : MonoBehaviour {
 		
 	private void onGameMute(bool isMute) {
 		if (mainThemeSong != null) {
-			if (isMute == true) {
-				mainThemeSong.pause();
-			}else{
-				mainThemeSong.play();
+			if (musicOnPauseMenu == true) {
+				mainThemeSong.setMute(isMute);
 			}
 		}
 	}	
@@ -68,13 +78,18 @@ public class LevelController : MonoBehaviour {
 	/*
 	 * Когда сворачиваешь или переходишь на другое окно
 	 * */
-	void OnApplicationPause(bool pauseStatus) {
+	void OnApplicationPause(bool pauseStatus) {		
         if (pauseStatus == true) {
 			GameController.pause();
 		}
+		
+		mainThemeSong.enabled = !pauseStatus;
     }
 	
-	/*void OnLevelWasLoaded(int level) {
-    	updateLevel(GameController.getLevelName());            
-    }*/
+	/*
+	 * Когда перешел на эту сцену через Application.LoadLevel("hex")
+	 * */
+	void OnLevelWasLoaded(int level) {
+		Time.timeScale = 1;
+    }
 }

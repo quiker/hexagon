@@ -7,18 +7,16 @@ public class AudioPlayer : MonoBehaviour {
 	private int currentPlaylistIndex = -1;
 	
 	void Update() {
-		if (SettingsContainer.GetMusicFlag()) {
-			if (playlist.Length > 0) {
-				if(!audio.isPlaying) {
-					if (!audio.clip != null) {
-						onClipComplete();
-					}else{
-						playClipByIndex(0);
-					}
+		if (playlist.Length > 0) {
+			if(!audio.isPlaying) {
+				if (!audio.clip != null) {
+					onClipComplete();
+				}else{
+					playClipByIndex(0);
 				}
-			}else{
-				throw new Exception("Playlist is empty");
 			}
+		}else{
+			throw new Exception("Playlist is empty");
 		}
 	}
 	
@@ -43,12 +41,16 @@ public class AudioPlayer : MonoBehaviour {
 	}
 	
 		
-	public void pause() {
+	private void pause() {
 		audio.Pause();
 	}
 	
 	
-	public void play() {
+	private void play() {
 		audio.Play();
+	}
+	
+	public void setMute(bool isMute) {
+		audio.volume = (isMute ? 0 : 1);
 	}
 }

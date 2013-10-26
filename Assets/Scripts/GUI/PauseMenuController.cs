@@ -34,4 +34,12 @@ public class PauseMenuController : MonoBehaviour {
 	public void hide() {
 		pausePanel.gameObject.SetActive(false);
 	}
+	
+	public void setShow(bool isShow) {
+		if (isShow) {
+			show();
+		}else{
+			hide();
+		}
+	}
 }

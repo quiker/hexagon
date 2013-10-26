@@ -76,7 +76,7 @@ public class GameController : MonoBehaviour {
 	
 	public static void completeScreen() {
 		//Time.timeScale = 0;
-		Debug.Log("LOOOSE!");
+		Debug.Log("WINNER!");
 	}
 	
 	public static void setMute(bool isMute) {
