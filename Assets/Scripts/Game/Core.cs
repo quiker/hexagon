@@ -13,7 +13,10 @@ public class Core : MonoBehaviour {
 	public Figure currentFigure;
 	//public UILabel scoreLabel = null;
 	public LevelFactory levelFactory;
-	
+	public AudioClip rotateAudioClip = null;
+	public AudioClip breakAudioClip = null;
+	public AudioClip connectAudioClip = null;
+		
 	// Use this for initialization
 	void Start () {
 		// init ring coordinates
@@ -62,6 +65,11 @@ public class Core : MonoBehaviour {
 	public void Connect(Figure _figure)
 	{
 		_figure.ConnectTo(figure);
+		
+		if (connectAudioClip != null) {
+			audio.PlayOneShot(connectAudioClip);
+		}
+		
 		CheckRings(_figure);
 	}
 	
@@ -169,7 +177,13 @@ public class Core : MonoBehaviour {
 
 		figure.UpdatePosition();
 		
-		GameController.addToScore(removePins.Count);
+		if (removePins.Count > 0) {
+			GameController.addToScore(removePins.Count);
+			
+			if (breakAudioClip != null) {
+				audio.PlayOneShot(breakAudioClip);
+			}
+		}
 	}
 	
 	private int RingNum(Vector2 pos)

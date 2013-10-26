@@ -8,6 +8,7 @@ public class Figure : MonoBehaviour {
 	
 	public Core core;
 	public Vector2 position;
+	public AudioClip rotateAudioClip = null;
 	
 	// Use this for initialization
 	public void Init (int x, int y) {
@@ -79,6 +80,7 @@ public class Figure : MonoBehaviour {
 	
 	public void RotateCCW()
 	{
+		audio.PlayOneShot(rotateAudioClip);
 		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
 		pw.StopAll();
 		foreach (Pin pin in pins) {
@@ -89,6 +91,7 @@ public class Figure : MonoBehaviour {
 	
 	public void RotateCW()
 	{
+		audio.PlayOneShot(rotateAudioClip);
 		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
 		pw.StopAll();
 		foreach (Pin pin in pins) {
