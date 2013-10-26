@@ -119,12 +119,4 @@ public class TouchController : MonoBehaviour
 	{
 		currentFigure.Tick();
 	}
-	
-	void onGamePaused() {
-		enabled = false;
-	}
-	
-	void onGameResumed() {
-		enabled = true;
-	}
 }

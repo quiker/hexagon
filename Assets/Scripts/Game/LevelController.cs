@@ -7,6 +7,8 @@ public class LevelController : MonoBehaviour {
 	public PauseMenuController pauseMenu = null;
 	public UIController ui = null;
 	public AudioPlayer mainThemeSong = null;	
+	public KeyboardController keyboardController = null;
+	public TouchController touchController = null;
 	
 	void Start() {
 		updateLevel(GameController.getLevelName());
@@ -29,16 +31,22 @@ public class LevelController : MonoBehaviour {
 		updateLevel(level);
 	}	
 	
-	private void onLevelStarted(string level) {
-		updateLevel(level);
-	}
-	
-	private void onGamePaused() {
-		pauseMenu.show();
-	}
-	
-	private void onGameResumed() {
-		pauseMenu.hide();
+	private void onLevelPaused(bool pauseState) {
+		if (pauseMenu != null) {
+			if (pauseState == true) {
+				pauseMenu.show();
+			}else{
+				pauseMenu.hide();
+			}
+		}
+		
+		if (keyboardController != null) {
+			keyboardController.enabled = !pauseState;
+		}
+		
+		if (touchController != null) {
+			touchController.enabled = !pauseState;
+		}
 	}
 	
 	private void onScoreUpdate(int score) {
@@ -65,4 +73,8 @@ public class LevelController : MonoBehaviour {
 			GameController.pause();
 		}
     }
+	
+	/*void OnLevelWasLoaded(int level) {
+    	updateLevel(GameController.getLevelName());            
+    }*/
 }

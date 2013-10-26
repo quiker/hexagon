@@ -18,14 +18,14 @@ public class GameController : MonoBehaviour {
 	public static void resume() {		
 		if ( isGamePaused() ) {
 			Time.timeScale = 1;
-			sendMessageToAllGameObjects("onGameResumed", null);
+			sendMessageToAllGameObjects("onLevelPaused", false);
 		}
 	}
 	
 	public static void pause() {
 		if ( !isGamePaused() ) {
 			Time.timeScale = 0;
-			sendMessageToAllGameObjects("onGamePaused", null);
+			sendMessageToAllGameObjects("onLevelPaused", true);
 		}
 	}
 	

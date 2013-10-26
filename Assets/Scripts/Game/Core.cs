@@ -52,6 +52,10 @@ public class Core : MonoBehaviour {
 	{
 		if (!figure.isCollisionRotateCW(currentFigure)) {
 			figure.RotateCW();
+			
+			if (rotateAudioClip != null) {
+				audio.PlayOneShot(rotateAudioClip);
+			}
 		}
 	}
 	
@@ -59,6 +63,10 @@ public class Core : MonoBehaviour {
 	{
 		if (!figure.isCollisionRotateCCW(currentFigure)) {
 			figure.RotateCCW();
+			
+			if (rotateAudioClip != null) {
+				audio.PlayOneShot(rotateAudioClip);
+			}
 		}
 	}
 	
