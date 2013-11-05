@@ -3,15 +3,12 @@ using System.Collections;
 
 public class LevelMenuController : MonoBehaviour {
 	void onSelectedLevel(GameObject go) {
-		/*
-		 * go.name - название кнопки
-		 * */
-		GameController.loadLevel(go.name);
+		Game.GetInstance().MenuStartLevel(1);
 	}
 	
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Escape)) {
-			GameController.mainMenuScene();
+			Game.GetInstance().MenuMainMenu();
 		}
 	}
 }

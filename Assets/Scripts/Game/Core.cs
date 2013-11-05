@@ -186,7 +186,7 @@ public class Core : MonoBehaviour {
 		figure.UpdatePosition();
 		
 		if (removePins.Count > 0) {
-			GameController.addToScore(removePins.Count);
+			Game.GetInstance().GetLevelController().AddScore(removePins.Count);
 			
 			if (breakAudioClip != null) {
 				audio.PlayOneShot(breakAudioClip);

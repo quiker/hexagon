@@ -6,10 +6,10 @@ public class UIController : MonoBehaviour {
 	public UILabel scoreLabel = null;
 	
 	public void onPauseClick() {
-		if ( !GameController.isGamePaused() ) {
-			GameController.pause();
+		if ( !Game.GetInstance().IsPaused() ) {
+			Game.GetInstance().MenuPause();
 		} else {
-			GameController.resume();
+			Game.GetInstance().MenuResume();
 		}
 	}
 	

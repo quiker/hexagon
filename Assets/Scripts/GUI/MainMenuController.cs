@@ -4,17 +4,17 @@ using System.Collections;
 public class MainMenuController : MonoBehaviour {
 
 	public void onNewGameClick() {
-		GameController.levelChangeScene();
+		Game.GetInstance().MenuLevelScreen();
 	}
 	
 	public void onQuitClick() {
-		GameController.quit();
+		Game.GetInstance().Quit();
 	}
 	
 	void Update() {
 		if (Application.platform == RuntimePlatform.Android) {
             if (Input.GetKey(KeyCode.Escape)){
-				GameController.quit();
+				Game.GetInstance().Quit();
             }
 		}
 	}		

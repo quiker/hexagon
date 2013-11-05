@@ -10,21 +10,20 @@ public class PauseMenuController : MonoBehaviour {
 	}
 	
 	public void onBackToGameClick() {
-		GameController.resume();
+		Game.GetInstance().MenuResume();
 	}
 	
 	public void onMainMenuClick() {
-		GameController.mainMenuScene();
+		Game.GetInstance().MenuMainMenu();
 	}
 	
 	public void OnMuteClick() {
-		GameController.setMute(!songCheckbox.isChecked);
+		Game.GetInstance().SetMute(!songCheckbox.isChecked);
 	}
 	
 	public void onRestartGameClick() {
-		GameController.restart();
+		Game.GetInstance().MenuRestart();
 	}
-	
 	
 	public void show() {
 		songCheckbox.isChecked = SettingsContainer.GetMusicFlag();

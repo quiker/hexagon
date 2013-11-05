@@ -36,10 +36,10 @@ public class KeyboardController : MonoBehaviour {
 		}
 		
 		if (Input.GetKeyDown(KeyCode.Escape)) {
-			if (!GameController.isGamePaused()) {
-				GameController.pause();
+			if (!Game.GetInstance().IsPaused()) {
+				Game.GetInstance().MenuPause();
 			}else{
-				GameController.resume();
+				Game.GetInstance().MenuResume();
 			}
 		}
 	}

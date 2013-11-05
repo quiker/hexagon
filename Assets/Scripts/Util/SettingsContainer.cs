@@ -48,4 +48,20 @@ public class SettingsContainer {
 			}
 		}
 	}
+	
+	public static string GetScoreTableLabel(int row)
+	{
+		if (row >= 0 && row < 10) {
+			return PlayerPrefs.GetString("score_table_"+row+"_label");
+		}
+		return "";
+	}
+	
+	public static int GetScoreTableValue(int row)
+	{
+		if (row >= 0 && row < 10) {
+			return PlayerPrefs.GetInt("score_table_"+row+"_value");
+		}
+		return 0;
+	}
 }
