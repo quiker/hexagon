@@ -2,20 +2,53 @@
 using System.Collections;
 
 public class MainMenuController : MonoBehaviour {
-
-	public void onNewGameClick() {
+	public UIPanel panel = null;
+	
+	// Start
+	void onStartClick() {
 		Game.GetInstance().MenuLevelScreen();
 	}
 	
-	public void onQuitClick() {
+	// Quit
+	void onQuitClick() {
 		Game.GetInstance().Quit();
 	}
 	
+	// SurvivalMode
+	void onSurvivalModeClick() {
+		Game.GetInstance().MenuSurvivalMode();
+	}
+	
+	// Settings
+	void onSettingsClick() {
+		Game.GetInstance().MenuSettings();
+	}
+	
+	// Tutorial
+	void onTutorialClick() {
+		Game.GetInstance().MenuTutorial();
+	}
+	
+	// Score
+	void onScoreClick() {
+		Game.GetInstance().MenuScoreTable();
+	}
+	
 	void Update() {
-		if (Application.platform == RuntimePlatform.Android) {
-            if (Input.GetKey(KeyCode.Escape)){
-				Game.GetInstance().Quit();
-            }
-		}
+		/*if (Input.GetKey(KeyCode.Escape)){
+			Game.GetInstance().Quit();
+        }*/
 	}		
+	
+	public void hide() {
+		if (panel != null) {
+			panel.gameObject.SetActive(false);
+		}
+	}
+	
+	public void show() {
+		if (panel != null) {
+			panel.gameObject.SetActive(true);
+		}
+	}
 }
