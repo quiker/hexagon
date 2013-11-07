@@ -34,13 +34,5 @@ public class KeyboardController : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.E)) {
 			currentFigure.RotateCW();
 		}
-		
-		if (Input.GetKeyDown(KeyCode.Escape)) {
-			if (!Game.GetInstance().IsPaused()) {
-				Game.GetInstance().MenuPause();
-			}else{
-				Game.GetInstance().MenuResume();
-			}
-		}
 	}
 }

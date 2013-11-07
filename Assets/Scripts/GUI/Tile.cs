@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour {
 		
 		for (int i = 0; i < RowCount; i++) {
 			for (int j = 0; j < ColCount; j++) {
-				Transform button = Instantiate(ButtonPrefub, new Vector3(-220 + (100 + MarginLeft) * j, 330 - (100 + MarginTop) * i, 0), Quaternion.identity) as Transform;
+				Transform button = Instantiate(ButtonPrefub, new Vector3(-220 + (100 + MarginLeft) * j, 330 - (100 + MarginTop) * i, -40), Quaternion.identity) as Transform;
 				button.parent = gameObject.transform;
 				
 				button.gameObject.AddComponent<UIButtonMessage>();

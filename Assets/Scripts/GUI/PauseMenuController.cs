@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PauseMenuController : MonoBehaviour {
-	public UIPanel pausePanel = null;
+public class PauseMenuController : AbstractPanelMenu {
 	public UICheckbox songCheckbox = null;
 	
 	void Start() {
@@ -26,12 +25,11 @@ public class PauseMenuController : MonoBehaviour {
 	}
 	
 	public void show() {
-		songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
-		pausePanel.gameObject.SetActive(true);
-	}
-	
-	public void hide() {
-		pausePanel.gameObject.SetActive(false);
+		base.show();
+		
+		if (songCheckbox != null) {
+			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
+		}
 	}
 	
 	public void setShow(bool isShow) {

@@ -35,20 +35,34 @@ public class Game : MonoBehaviour {
 	
 	public PauseMenuController pauseMenu = null;
 	public AudioPlayer mainThemeSong = null;	
-	public KeyboardController keyboardController = null;
-	public TouchController touchController = null;
+	public GameObject input = null;
 	public bool musicOnPauseMenu = true;
 	
 	public LevelController levelController;
 	
 	private int level = 0; 
 	private string mode = ""; 
+	private string state = "";
 	
 	void Start() {
 		mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
 		
 		//////
+		/*
+		 * 
+		 * 
+		 * */
 		Time.timeScale = 0;
+		
+		if (input != null) {
+			input.SetActive(false);
+		}
+		//////////
+		/*
+		 * 
+		 * 
+		 * */
+		
 		MenuMainMenu();
 		mode = "level";
 		level = 1;
@@ -89,6 +103,7 @@ public class Game : MonoBehaviour {
 	}
 	public void Quit()
 	{
+		Debug.Log("Quit");
 		Application.Quit();
 	}
 	public void MenuStartLevel(int level)
@@ -113,14 +128,11 @@ public class Game : MonoBehaviour {
 	{
 		Time.timeScale = 0;
 		ActivatePanel("pause");
-		/* On / Off keyboardController */
-		if (keyboardController != null) {
-			keyboardController.enabled = false;
+		
+		if (input != null) {
+			input.SetActive(false);
 		}
-		/* On / Off touchController */
-		if (touchController != null) {
-			touchController.enabled = false;
-		}
+		
 		/* On / Off music */
 		if (mainThemeSong != null) {
 			mainThemeSong.setMute(!musicOnPauseMenu || !SettingsContainer.GetMusicFlag());
@@ -131,14 +143,10 @@ public class Game : MonoBehaviour {
 	{
 		Time.timeScale = 1;
 		Debug.Log ("Resume");
-		ActivatePanel("none");
-		/* On / Off keyboardController */
-		if (keyboardController != null) {
-			keyboardController.enabled = true;
-		}
-		/* On / Off touchController */
-		if (touchController != null) {
-			touchController.enabled = true;
+		ActivatePanel("playing");
+		
+		if (input != null) {
+			input.SetActive(true);
 		}
 		/* On / Off music */
 		if (mainThemeSong != null) {
@@ -190,6 +198,8 @@ public class Game : MonoBehaviour {
 			case "complete":    completePanel.show(); break;
 			case "fail":        failPanel.show(); break;
 		}
+		
+		state = panel;
 	}
 	
 	public bool IsPaused()
@@ -206,7 +216,7 @@ public class Game : MonoBehaviour {
 	 * Когда сворачиваешь или переходишь на другое окно
 	 * */
 	void OnApplicationPause(bool pauseStatus) {		
-        if (pauseStatus == true) {
+        if (pauseStatus == true && !IsPaused()) {
 			MenuPause();
 		}
 		mainThemeSong.enabled = !pauseStatus;
@@ -230,4 +240,18 @@ public class Game : MonoBehaviour {
 		}
 	}
 	
+	public string getState() {
+		return state;
+	}
+	
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			switch(getState()) {
+				case "mainMenu": Quit(); break;
+				case "playing": MenuPause(); break;
+				case "pause":  MenuResume(); break;
+				default: MenuMainMenu(); break;					
+			}
+		}
+	}
 }

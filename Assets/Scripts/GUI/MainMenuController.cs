@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MainMenuController : MonoBehaviour {
-	public UIPanel panel = null;
-	
+public class MainMenuController : AbstractPanelMenu {
 	// Start
 	void onStartClick() {
 		Game.GetInstance().MenuLevelScreen();
@@ -32,23 +30,5 @@ public class MainMenuController : MonoBehaviour {
 	// Score
 	void onScoreClick() {
 		Game.GetInstance().MenuScoreTable();
-	}
-	
-	void Update() {
-		/*if (Input.GetKey(KeyCode.Escape)){
-			Game.GetInstance().Quit();
-        }*/
-	}		
-	
-	public void hide() {
-		if (panel != null) {
-			panel.gameObject.SetActive(false);
-		}
-	}
-	
-	public void show() {
-		if (panel != null) {
-			panel.gameObject.SetActive(true);
-		}
 	}
 }
