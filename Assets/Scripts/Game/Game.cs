@@ -25,15 +25,15 @@ public class Game : MonoBehaviour {
 		return _instance;	
 	}
 	
-	public MainMenuController mainMenuPanel;
-	public LevelMenuController selectLevelPanel;
-	public TutorialMenuController tutorialPanel;
-	public ScoreMenuController scoreTablePanel;
-	public SettingsMenuController settingsPanel;
-	public CompleteScreenController completePanel;
-	public FailScreenController failPanel;
+	public AbstractPanelMenu mainMenuPanel;
+	public AbstractPanelMenu selectLevelPanel;
+	public AbstractPanelMenu tutorialPanel;
+	public AbstractPanelMenu scoreTablePanel;
+	public AbstractPanelMenu settingsPanel;
+	public AbstractPanelMenu completePanel;
+	public AbstractPanelMenu failPanel;
+	public AbstractPanelMenu pauseMenu = null;
 	
-	public PauseMenuController pauseMenu = null;
 	public AudioPlayer mainThemeSong = null;	
 	public GameObject input = null;
 	public bool musicOnPauseMenu = true;
@@ -47,22 +47,7 @@ public class Game : MonoBehaviour {
 	void Start() {
 		mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
 		
-		//////
-		/*
-		 * 
-		 * 
-		 * */
-		Time.timeScale = 0;
-		
-		if (input != null) {
-			input.SetActive(false);
-		}
-		//////////
-		/*
-		 * 
-		 * 
-		 * */
-		
+		//////		
 		MenuMainMenu();
 		mode = "level";
 		level = 1;
