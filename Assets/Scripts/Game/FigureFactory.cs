@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Linq;
+using System;
 
 public class FigureFactory : MonoBehaviour {
 	
@@ -109,10 +110,20 @@ public class FigureFactory : MonoBehaviour {
 		 0,  1,    0,  0,    0, -1,    1,  0,
 	};
 	
+	int[] colors = {};
+	
+	public void SetColors(int[] colors)
+	{
+		this.colors = colors;
+	}
+	
 	public Pin[] GetFigure(Transform parent)
 	{
-		int templateNum = Random.Range(0,48);
-		int color = Random.Range(0,5);
+		if (colors.Length == 0) throw new Exception("Need to set colors to FigureFactory");
+		
+		int templateNum = UnityEngine.Random.Range(0,48);
+		
+		int color = colors[UnityEngine.Random.Range(0,colors.Length)];
 		Pin[] pins = new Pin[4];
 		
 		for (int i = 0; i < 4; i++) {

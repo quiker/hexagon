@@ -5,7 +5,8 @@ using System;
 public class LevelMenuController : AbstractPanelMenu {
 	// When level will be select
 	void onLevelSelected(GameObject go) {
-		Game.GetInstance().MenuStartLevel(1);
+		int levelIndex = Convert.ToInt32(go.transform.name);
+		Game.GetInstance().MenuStartLevel(levelIndex);
 	}
 	
 	// When button will be create

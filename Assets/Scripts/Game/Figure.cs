@@ -291,5 +291,6 @@ public class Figure : MonoBehaviour {
 		int arrayOriginalSize = figure.pins.Length;
 		Array.Resize< Pin >(ref figure.pins, figure.pins.Length + pins.Length);
 		Array.Copy(pins, 0, figure.pins, arrayOriginalSize, pins.Length);
+		//pins = new Pin[0];
 	}
 }

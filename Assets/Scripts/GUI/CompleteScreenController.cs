@@ -14,7 +14,7 @@ public class CompleteScreenController : AbstractPanelMenu {
 		
 	public void updateScore(int score) {
 		if (scoreLabel != null) {
-			scoreLabel.text = score.ToString();	
+			scoreLabel.text = "Result: " + score.ToString();	
 		}
 	}
 }

@@ -11,8 +11,6 @@ public class Core : MonoBehaviour {
 	private int[,] pinMap = new int[41,41];
 	
 	public Figure currentFigure;
-	//public UILabel scoreLabel = null;
-	public LevelFactory levelFactory;
 	public AudioClip rotateAudioClip = null;
 	public AudioClip breakAudioClip = null;
 	public AudioClip connectAudioClip = null;
@@ -39,12 +37,12 @@ public class Core : MonoBehaviour {
 		}
 	}
 	
-	public void Reinit()
+	public void SetPins(Pin[] pins)
 	{
 		figure = GetComponent("Figure") as Figure;
 		figure.Init(0, 0);
 		figure.Reinit();
-		figure.pins = levelFactory.GetLevel(1, this);
+		figure.pins = pins;
 		figure.UpdatePosition();
 	}
 
@@ -78,7 +76,18 @@ public class Core : MonoBehaviour {
 			audio.PlayOneShot(connectAudioClip);
 		}
 		
+		CheckFail(_figure);
 		CheckRings(_figure);
+	}
+	
+	public void CheckFail(Figure _figure)
+	{
+		foreach (Pin pin in figure.pins) {
+			if (pin.position.x == 0 && pin.position.y == CurrentFigure.startY) {
+				Game.GetInstance().FailScreen();
+				break;
+			}
+		}
 	}
 	
 	public void CheckRings(Figure _figure)
@@ -108,6 +117,7 @@ public class Core : MonoBehaviour {
 		HashSet<int> foundRingNumsSet = new HashSet<int>();
 		foreach (int ringNum in ringNums) {
 			bool found = true;
+			if (ringNum >= rings.Length) continue;
 			foreach (Vector2 pos in rings[ringNum-1]) {
 				if (pinMap[(int)pos.x+21, (int)pos.y+21] == -1) {
 					found = false;
@@ -201,10 +211,6 @@ public class Core : MonoBehaviour {
 		} else {
 			return (int)(Mathf.Abs(pos.x) + Mathf.Abs(pos.y));
 		}
-	}
-	
-	void onGameRestarted() {
-		Reinit();
 	}
 	
 }

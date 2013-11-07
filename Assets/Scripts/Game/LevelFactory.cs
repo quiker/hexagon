@@ -6,33 +6,29 @@ public class LevelFactory : MonoBehaviour {
 	
 	public GameObject pinPrefab;
 	
-	private int[] level1 = {0,0,0};
-	
-	public Pin[] GetLevel(int level, Core core)
-	{
-		int[] template;
-		template = level1; 
-		 
-		Pin[] pins = new Pin[template.Length / 3];
+	public Pin[] GetLevel(Core core, int[][] pins)
+	{	 
+		Pin[] pinsArr = new Pin[pins.Length];
 		
-		for (int i = 0; i < template.Length / 3; i++) {
+		for (int i = 0; i < pins.Length; i++) {
 			GameObject pinGO = Instantiate(pinPrefab) as GameObject;
 			pinGO.transform.parent = core.transform.FindChild("PinWrapper");
 			Pin pin = pinGO.GetComponent("Pin") as Pin;
 			
-			pin.color = template[i*3+2];
+			pin.color = pins[i][2];
+			pin.type  = pins[i][3];
 			pin.position = new Vector2(
-				template[i*3],
-				template[i*3+1]
+				pins[i][0],
+				pins[i][1]
 			);
 			
-		    pins[i] = pin;
+		    pinsArr[i] = pin;
 		}
 		
-		return pins;
+		return pinsArr;
 	}
 	
-	public Pin[] GetTestLevel(int num, Core core)
+	public Pin[] GetTestLevel(Core core)
 	{
 		Pin[] pins = new Pin[121];
 		

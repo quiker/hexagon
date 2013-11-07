@@ -4,6 +4,7 @@ using System.Collections;
 public class Pin : MonoBehaviour
 {
 	public int color;
+	public int type;
 
 	public Vector2 position;
 	

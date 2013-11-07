@@ -8,20 +8,24 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 	public FigureFactory figureFactory;
 	
 	private Figure figure;
-	private int startY = 20;
+	public static int startY = 18;
 	private bool horizontalMoveDown = true;
 	
 	// Use this for initialization
 	void Start () {
 		figure = GetComponent("Figure") as Figure;
-		NewFigure();
 	}
 	
-	void NewFigure()
+	public void NewFigure()
 	{
 		figure.Init(0, startY);
 		figure.pins = figureFactory.GetFigure(transform.FindChild("PinWrapper"));
 		figure.UpdatePosition();
+	}
+	
+	public void Reinit()
+	{
+		figure.Reinit();
 	}
 	
 	// Update is called once per frame

@@ -22,7 +22,7 @@ public class Game : MonoBehaviour {
 		if (_instance == null) {
 			_instance = new Game();
 		}
-		return _instance;	
+		return _instance;
 	}
 	
 	public AbstractPanelMenu mainMenuPanel;
@@ -32,7 +32,9 @@ public class Game : MonoBehaviour {
 	public AbstractPanelMenu settingsPanel;
 	public AbstractPanelMenu completePanel;
 	public AbstractPanelMenu failPanel;
-	public AbstractPanelMenu pauseMenu = null;
+	public AbstractPanelMenu pauseMenu;
+	
+	public UIController ui;
 	
 	public AudioPlayer mainThemeSong = null;	
 	public GameObject input = null;
@@ -46,11 +48,7 @@ public class Game : MonoBehaviour {
 	
 	void Start() {
 		mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
-		
-		//////		
 		MenuMainMenu();
-		mode = "level";
-		level = 1;
 	}
 	
 	public int GetCurrentLevel()
@@ -60,12 +58,14 @@ public class Game : MonoBehaviour {
 	
 	public void MenuMainMenu()
 	{
+		StopTime();
 		ActivatePanel("mainMenu");
 		SendMessageToAllGameObjects("onMainMenuShow");
 	}
 	
 	public void MenuLevelScreen()
 	{
+		StopTime();
 		mode = "level";
 		ActivatePanel("selectLevel");
 		SendMessageToAllGameObjects("onSelectLevelShow");
@@ -78,11 +78,13 @@ public class Game : MonoBehaviour {
 	}
 	public void MenuTutorial()
 	{
+		StopTime();
 		ActivatePanel("tutorial");
 		SendMessageToAllGameObjects("onTutorialShow");
 	}
 	public void MenuSettings()
 	{
+		StopTime();
 		ActivatePanel("settings");
 		SendMessageToAllGameObjects("onSettingsShow");
 	}
@@ -93,11 +95,13 @@ public class Game : MonoBehaviour {
 	}
 	public void MenuStartLevel(int level)
 	{
+		StartTime();
 		this.level = level;
 		MenuRestart();
 	}
 	public void MenuScoreTable()
 	{
+		StopTime();
 		ActivatePanel("scoreTable");
 		GameObject gol;
 		GameObject gov;
@@ -111,7 +115,7 @@ public class Game : MonoBehaviour {
 	}
 	public void MenuPause()
 	{
-		Time.timeScale = 0;
+		StopTime();
 		ActivatePanel("pause");
 		
 		if (input != null) {
@@ -127,6 +131,7 @@ public class Game : MonoBehaviour {
 	public void MenuResume()
 	{
 		Time.timeScale = 1;
+		StartTime();
 		Debug.Log ("Resume");
 		ActivatePanel("playing");
 		
@@ -149,16 +154,17 @@ public class Game : MonoBehaviour {
 		level++;
 		MenuRestart();
 	}
-	public void CompleteScreen()
+	public void CompleteScreen(int score, int stars)
 	{
-		// calc score 
-		// calc stars
+		StopTime();
+		(completePanel as CompleteScreenController).updateScore(score);
 		// save highscore
 		// save score to score table
 		ActivatePanel("complete");
 	}
 	public void FailScreen()
 	{
+		StopTime();
 		ActivatePanel("fail");
 	}
 	
@@ -172,6 +178,7 @@ public class Game : MonoBehaviour {
 		if (settingsPanel != null) settingsPanel.hide();
 		if (completePanel != null) completePanel.hide();
 		if (failPanel != null) failPanel.hide();
+		ui.gameObject.SetActive(true);
 		switch (panel)
 		{
 			case "mainMenu":    mainMenuPanel.show(); break;
@@ -180,11 +187,21 @@ public class Game : MonoBehaviour {
 			case "tutorial":    tutorialPanel.show(); break;
 			case "scoreTable":  scoreTablePanel.show(); break;
 			case "settings":    settingsPanel.show(); break;
-			case "complete":    completePanel.show(); break;
-			case "fail":        failPanel.show(); break;
+			case "complete":    completePanel.show(); ui.gameObject.SetActive(false); break;
+			case "fail":        failPanel.show(); ui.gameObject.SetActive(false); break;
 		}
 		
 		state = panel;
+	}
+	
+	protected void StopTime()
+	{
+		Time.timeScale = 0;
+	}
+	
+	protected void StartTime()
+	{
+		Time.timeScale = 1;
 	}
 	
 	public bool IsPaused()
