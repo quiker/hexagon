@@ -34,7 +34,6 @@ public class Game : MonoBehaviour {
 	public FailScreenController failPanel;
 	
 	public PauseMenuController pauseMenu = null;
-	public UIController ui = null;
 	public AudioPlayer mainThemeSong = null;	
 	public KeyboardController keyboardController = null;
 	public TouchController touchController = null;
