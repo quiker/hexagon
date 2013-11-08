@@ -1,6 +1,6 @@
 {
-	"id": 1,
-	"name": "test",
+	"id": 4,
+	"name": "test4",
 	"star1": 120,
 	"star2": 240,
 	"star3": 280,
