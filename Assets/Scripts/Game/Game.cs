@@ -47,7 +47,7 @@ public class Game : MonoBehaviour {
 	private string state = "";
 	
 	void Start() {
-		mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
+		EnableAudioListener(SettingsContainer.GetMusicFlag());
 		MenuMainMenu();
 	}
 	
@@ -124,8 +124,9 @@ public class Game : MonoBehaviour {
 		
 		/* On / Off music */
 		if (mainThemeSong != null) {
-			mainThemeSong.setMute(!musicOnPauseMenu || !SettingsContainer.GetMusicFlag());
+			EnableAudioListener(musicOnPauseMenu && SettingsContainer.GetMusicFlag());
 		}		
+		
 		SendMessageToAllGameObjects("onLevelPaused", true);
 	}
 	public void MenuResume()
@@ -134,14 +135,14 @@ public class Game : MonoBehaviour {
 		StartTime();
 		Debug.Log ("Resume");
 		ActivatePanel("playing");
+		EnableInput();
+		ui.gameObject.SetActive(true);
 		
-		if (input != null) {
-			input.SetActive(true);
-		}
 		/* On / Off music */
 		if (mainThemeSong != null) {
-			mainThemeSong.setMute(!SettingsContainer.GetMusicFlag());
+			EnableAudioListener(SettingsContainer.GetMusicFlag());
 		}		
+		
 		SendMessageToAllGameObjects("onLevelPaused", false);
 	}
 	public void MenuRestart()
@@ -157,6 +158,7 @@ public class Game : MonoBehaviour {
 	public void CompleteScreen(int score, int stars)
 	{
 		StopTime();
+		DisableInput();
 		(completePanel as CompleteScreenController).updateScore(score);
 		// save highscore
 		// save score to score table
@@ -165,6 +167,7 @@ public class Game : MonoBehaviour {
 	public void FailScreen()
 	{
 		StopTime();
+		DisableInput();
 		ActivatePanel("fail");
 	}
 	
@@ -178,7 +181,7 @@ public class Game : MonoBehaviour {
 		if (settingsPanel != null) settingsPanel.hide();
 		if (completePanel != null) completePanel.hide();
 		if (failPanel != null) failPanel.hide();
-		ui.gameObject.SetActive(true);
+		//ui.gameObject.SetActive(true);
 		switch (panel)
 		{
 			case "mainMenu":    mainMenuPanel.show(); break;
@@ -197,6 +200,18 @@ public class Game : MonoBehaviour {
 	protected void StopTime()
 	{
 		Time.timeScale = 0;
+	}
+	
+	protected void DisableInput() {
+		if (input != null) {
+			input.SetActive(false);
+		}
+	}
+	
+	protected void EnableInput() {
+		if (input != null) {
+			input.SetActive(true);
+		}
 	}
 	
 	protected void StartTime()
@@ -229,7 +244,7 @@ public class Game : MonoBehaviour {
 			SettingsContainer.SetMusicFlag(!isMute);
 			if (mainThemeSong != null) {
 				if (musicOnPauseMenu) {
-					mainThemeSong.setMute(isMute);
+					EnableAudioListener(!isMute);
 				}
 			}
 			SendMessageToAllGameObjects("onGameMute", isMute);
@@ -244,6 +259,10 @@ public class Game : MonoBehaviour {
 	
 	public string getState() {
 		return state;
+	}
+	
+	public void EnableAudioListener(bool enabled) {
+		AudioListener.volume = enabled ? 1 : 0;
 	}
 	
 	void Update() {

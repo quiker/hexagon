@@ -28,11 +28,7 @@ public class Tile : MonoBehaviour {
 				button.parent = gameObject.transform;
 				
 				button.gameObject.AddComponent<UIButtonMessage>();
-				
-				UIButtonMessage bm = button.GetComponent<UIButtonMessage>();
-				bm.target = Controller;
-				bm.functionName = "onLevelSelected";
-				
+								
 				int levelIndex = ColCount * i + j + 1;
 				button.name  = levelIndex.ToString();
 				

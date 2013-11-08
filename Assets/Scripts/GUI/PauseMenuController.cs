@@ -3,11 +3,7 @@ using System.Collections;
 
 public class PauseMenuController : AbstractPanelMenu {
 	public UICheckbox songCheckbox = null;
-	
-	void Start() {
-		songCheckbox.startsChecked = SettingsContainer.GetMusicFlag();
-	}
-	
+			
 	public void onBackToGameClick() {
 		Game.GetInstance().MenuResume();
 	}
@@ -16,27 +12,25 @@ public class PauseMenuController : AbstractPanelMenu {
 		Game.GetInstance().MenuMainMenu();
 	}
 	
-	public void OnMuteClick() {
-		Game.GetInstance().SetMute(!songCheckbox.isChecked);
+	public void onMuteChecked(bool isChecked) {
+		if (songCheckbox != null) {
+			Game.GetInstance().SetMute(!isChecked);
+		}
 	}
 	
 	public void onRestartGameClick() {
 		Game.GetInstance().MenuRestart();
 	}
 	
-	public void show() {
-		base.show();
-		
+	void Start() {
 		if (songCheckbox != null) {
-			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
+			songCheckbox.startsChecked = SettingsContainer.GetMusicFlag();
 		}
 	}
 	
-	public void setShow(bool isShow) {
-		if (isShow) {
-			show();
-		}else{
-			hide();
+	void OnEnable() {
+		if (songCheckbox != null) {
+			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
 		}
 	}
 }
