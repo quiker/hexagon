@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SettingsContainer {
+public class SettingsContainer
+{
+	
+	const int levelCount = 35;
 
 	public static bool GetMusicFlag()
 	{
@@ -15,7 +18,7 @@ public class SettingsContainer {
 	
 	public static int GetLevelStars(int level)
 	{
-		if (level > 0 && level <= 30) {
+		if (level > 0 && level <= levelCount) {
 			return PlayerPrefs.GetInt("level"+level+"_stars", 0);
 		}
 		return 0;
@@ -23,7 +26,7 @@ public class SettingsContainer {
 	
 	public static void SetLevelStars(int level, int stars)
 	{
-		if (level > 0 && level <= 30 && stars > 0 && stars <= 3) {
+		if (level > 0 && level <= levelCount && stars > 0 && stars <= 3) {
 			int currentStars = PlayerPrefs.GetInt("level"+level+"_stars", 0);
 			if (stars > currentStars) {
 				PlayerPrefs.SetInt("level"+level+"_stars", stars);
@@ -33,15 +36,15 @@ public class SettingsContainer {
 	
 	public static int GetLevelMaxScore(int level)
 	{
-		if (level > 0 && level <= 30) {
-			return PlayerPrefs.GetInt("level"+level+"_stars", 0);
+		if (level > 0 && level <= levelCount) {
+			return PlayerPrefs.GetInt("level"+level+"_max_score", 0);
 		}
 		return 0;
 	}
 	
 	public static void SetLevelMaxScore(int level, int score)
 	{
-		if (level > 0 && level <= 30) {
+		if (level > 0 && level <= levelCount) {
 			int currentMaxScore = PlayerPrefs.GetInt("level"+level+"_max_score", 0);
 			if (score > currentMaxScore) {
 				PlayerPrefs.SetInt("level"+level+"_max_score", score);
