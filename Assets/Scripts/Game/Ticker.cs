@@ -13,6 +13,7 @@ public class Ticker : MonoBehaviour {
 	
 	private float tick;
 	private float sumDeltaTime = 0;
+	private bool stopped = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -26,13 +27,24 @@ public class Ticker : MonoBehaviour {
 		sumDeltaTime = 0;
 	}
 	
+	public void Stop()
+	{
+		stopped = true;
+	}
+	
+	public void Resume()
+	{
+		stopped = false;
+	}
+	
 	// Update is called once per frame
 	void Update () {
-		sumDeltaTime += Time.deltaTime;
-		if (sumDeltaTime >= tick) {
-			DoTick();
+		if (!stopped) {
+			sumDeltaTime += Time.deltaTime;
+			if (sumDeltaTime >= tick) {
+				DoTick();
+			}
 		}
-			
 	}	
 
 }

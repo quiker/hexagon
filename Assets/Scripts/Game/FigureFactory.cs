@@ -132,6 +132,7 @@ public class FigureFactory : MonoBehaviour {
 			Pin pin = pinGO.GetComponent("Pin") as Pin;
 			
 			pin.color = color;
+			pin.type = Pin.PIN_TYPE_PILL;
 			pin.position = new Vector2(
 				templates[templateNum * 8 + i * 2 + 0],
 				templates[templateNum * 8 + i * 2 + 1]

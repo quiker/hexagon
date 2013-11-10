@@ -2,11 +2,12 @@
 using System.Collections;
 using System;
 
-public class Figure : MonoBehaviour {
-
+public class Figure : MonoBehaviour
+{
+	[HideInInspector]
 	public Pin[] pins;
 	
-	public Core core;
+	public Figure[] anotherFigures;
 	public Vector2 position;
 	public AudioClip rotateAudioClip = null;
 	
@@ -112,11 +113,11 @@ public class Figure : MonoBehaviour {
 	
 	public bool isCollisionUp()
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
-		foreach (Pin pin in pins) {
-			if (coreFigure.IsFilled(position + pin.position + new Vector2(0, 1))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + pin.position + new Vector2(0, 1))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -124,11 +125,11 @@ public class Figure : MonoBehaviour {
 	
 	public bool isCollisionDown()
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
-		foreach (Pin pin in pins) {
-			if (coreFigure.IsFilled(position + pin.position + new Vector2(0, -1))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + pin.position + new Vector2(0, -1))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -136,11 +137,11 @@ public class Figure : MonoBehaviour {
 	
 	public bool isCollisionRightDown()
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
-		foreach (Pin pin in pins) {
-			if (coreFigure.IsFilled(position + pin.position + new Vector2(1, 0))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + pin.position + new Vector2(1, 0))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -148,11 +149,11 @@ public class Figure : MonoBehaviour {
 	
 	public bool isCollisionRightUp()
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
-		foreach (Pin pin in pins) {
-			if (coreFigure.IsFilled(position + pin.position + new Vector2(1, 1))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + pin.position + new Vector2(1, 1))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -160,11 +161,11 @@ public class Figure : MonoBehaviour {
 	
 	public bool isCollisionLeftDown()
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
-		foreach (Pin pin in pins) {
-			if (coreFigure.IsFilled(position + pin.position + new Vector2(-1, -1))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + pin.position + new Vector2(-1, -1))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -172,11 +173,11 @@ public class Figure : MonoBehaviour {
 	
 	public bool isCollisionLeftUp()
 	{
-		Figure coreFigure = core.GetComponent("Figure") as Figure;
-		
-		foreach (Pin pin in pins) {
-			if (coreFigure.IsFilled(position + pin.position + new Vector2(-1, 0))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + pin.position + new Vector2(-1, 0))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -221,27 +222,25 @@ public class Figure : MonoBehaviour {
 		return false;
 	}
 	
-	public bool isCollisionRotateCW(Figure figure = null)
+	public bool isCollisionRotateCW()
 	{
-		if (!figure) {
-			figure = core.GetComponent("Figure") as Figure;
-		}
-		foreach (Pin pin in pins) {
-			if (figure.IsFilled(position + HexVector2.RotateCW(pin.position))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + HexVector2.RotateCW(pin.position))) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 	
-	public bool isCollisionRotateCCW(Figure figure = null)
+	public bool isCollisionRotateCCW()
 	{
-		if (!figure) {
-			figure = core.GetComponent("Figure") as Figure;
-		}
-		foreach (Pin pin in pins) {
-			if (figure.IsFilled(position + HexVector2.RotateCCW(pin.position))) {
-				return true;
+		foreach (Figure figure in anotherFigures) {
+			foreach (Pin pin in pins) {
+				if (figure.IsFilled(position + HexVector2.RotateCCW(pin.position))) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -285,12 +284,13 @@ public class Figure : MonoBehaviour {
 	{
 		foreach (Pin pin in pins) {
 			pin.position = pin.position + position - figure.position;
-			pin.transform.parent = core.transform.FindChild("PinWrapper");
+			pin.transform.parent = figure.transform.FindChild("PinWrapper");
 		}
 		
 		int arrayOriginalSize = figure.pins.Length;
 		Array.Resize< Pin >(ref figure.pins, figure.pins.Length + pins.Length);
 		Array.Copy(pins, 0, figure.pins, arrayOriginalSize, pins.Length);
-		//pins = new Pin[0];
+		pins = new Pin[0];
+		Reinit();
 	}
 }

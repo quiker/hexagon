@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CurrentFigure : MonoBehaviour, Ticker.TickListener
+public class CurrentFigure : MonoBehaviour
 {
-	
-	public Core core;
 	public FigureFactory figureFactory;
+	public LevelController levelController = null;
 	
-	private Figure figure;
+	[HideInInspector]
+	public Figure figure;
 	public static int startY = 18;
 	private bool horizontalMoveDown = true;
 	
@@ -33,11 +33,6 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 		
 	}
 	
-	public void OnTick()
-	{
-		Tick();
-	}
-	
 	public void Tick()
 	{
 		if (figure.isCollisionLeftDownWall()) {
@@ -52,8 +47,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 	public bool MoveDown()
 	{
 		if (figure.isCollisionDown()) {
-			core.Connect(figure);
-			NewFigure();
+			levelController.OnConnectStart();
 			return false;
 		} else {
 			figure.MoveDown();
@@ -90,8 +84,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 			return true;
 		} else {
 			if (connect) { 
-				core.Connect(figure);
-				NewFigure();
+				levelController.OnConnectStart();
 			}
 		}
 		return false;
@@ -113,8 +106,7 @@ public class CurrentFigure : MonoBehaviour, Ticker.TickListener
 			return true;
 		} else {
 			if (connect) { 
-				core.Connect(figure);
-				NewFigure();
+				levelController.OnConnectStart();
 			}
 		}
 		return false;

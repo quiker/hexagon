@@ -3,11 +3,13 @@ using System.Collections;
 using System;
 using SimpleJSON;
 
-public class LevelController : MonoBehaviour {
+public class LevelController : MonoBehaviour, Ticker.TickListener
+{
 	public Core core = null;
 	public CurrentFigure currentFigure = null;
 	public LevelFactory levelFactory = null;
 	public FigureFactory figureFactory = null;
+	public Ticker ticker = null;
 	
 	private int id = 0;
 	private string name = "test";
@@ -16,19 +18,32 @@ public class LevelController : MonoBehaviour {
 	private int star3 = 0;
 	private int figureLimit = 0;
 	private int tick = 0;
+	private int lineLength = 0;
+	private int groupSize = 0;
+	private int enabledHexagons = 0;
 	private int[] colors;
 	private int score = 0;
 	
-	public int winScore = 6; //-----------------
-	
 	public UIController ui = null;
 	
-	public void AddScore(int score) {
-		SetScore(this.score + score);
-		/////--------------
-		if (this.score >= winScore) {
-			LevelComplete();
-		}
+	public void OnTick()
+	{
+		currentFigure.Tick();
+	}
+	
+	public void OnConnectStart()
+	{
+		ticker.Stop();
+		core.Connect(currentFigure.figure);
+	}
+	
+	public void OnConnectFinish()
+	{
+		currentFigure.NewFigure();
+		ticker.Resume();
+		
+		// check level is completed
+		//LevelComplete();
 	}
 	
 	private void LoadLevel(int level)
@@ -72,6 +87,7 @@ public class LevelController : MonoBehaviour {
 
 	protected void LevelComplete()
 	{
+		// calculate stars
 		int stars = 0;
 		if (score >= star1) stars = 1;
 		if (score >= star2) stars = 2;
@@ -80,9 +96,23 @@ public class LevelController : MonoBehaviour {
 		Game.GetInstance().CompleteScreen(score, stars);
 	}
 	
-	private void onLevelStarted(int level) {
+	private void onLevelStarted(int level)
+	{
 		LoadLevel(level);
-	}	
+	}
+	
+	public void AddScore(int type, int mobs)
+	{
+		// calculate score
+		int score = 0;
+		
+		AddScore(score);
+	}
+	
+	public void AddScore(int score)
+	{
+		SetScore(this.score + score);
+	}
 	
 	private void SetScore(int score)
 	{

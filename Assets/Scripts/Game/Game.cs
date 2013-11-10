@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Game : MonoBehaviour {
-	
+public class Game : MonoBehaviour
+{
 	private static Game _instance = null;
 	
 	protected Game () {}

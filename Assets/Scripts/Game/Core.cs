@@ -3,17 +3,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Core : MonoBehaviour {
-	
+public class Core : MonoBehaviour
+{
 	private Figure figure;
-	private int score = 0;
 	private Vector2[][] rings;
 	private int[,] pinMap = new int[41,41];
+	private float delayEndTime = 0;
 	
-	public Figure currentFigure;
+	public LevelController levelController = null;
 	public AudioClip rotateAudioClip = null;
 	public AudioClip breakAudioClip = null;
 	public AudioClip connectAudioClip = null;
+	
+	// data for checking
+	private Pin[] checkPins;
 		
 	// Use this for initialization
 	void Start () {
@@ -48,7 +51,7 @@ public class Core : MonoBehaviour {
 
 	public void RotateCW()
 	{
-		if (!figure.isCollisionRotateCW(currentFigure)) {
+		if (!figure.isCollisionRotateCW()) {
 			figure.RotateCW();
 			
 			if (rotateAudioClip != null) {
@@ -59,7 +62,7 @@ public class Core : MonoBehaviour {
 	
 	public void RotateCCW()
 	{
-		if (!figure.isCollisionRotateCCW(currentFigure)) {
+		if (!figure.isCollisionRotateCCW()) {
 			figure.RotateCCW();
 			
 			if (rotateAudioClip != null) {
@@ -70,27 +73,68 @@ public class Core : MonoBehaviour {
 	
 	public void Connect(Figure _figure)
 	{
-		_figure.ConnectTo(figure);
-		
 		if (connectAudioClip != null) {
 			audio.PlayOneShot(connectAudioClip);
 		}
 		
-		CheckFail(_figure);
-		CheckRings(_figure);
-	}
-	
-	public void CheckFail(Figure _figure)
-	{
-		foreach (Pin pin in figure.pins) {
-			if (pin.position.x == 0 && pin.position.y == CurrentFigure.startY) {
-				Game.GetInstance().FailScreen();
-				break;
-			}
+		checkPins = _figure.pins;
+		_figure.ConnectTo(figure);
+		
+		if (CheckFail()) {
+			Game.GetInstance().FailScreen();
+			levelController.OnConnectFinish();
+		} else {
+			CheckAll();
 		}
 	}
 	
-	public void CheckRings(Figure _figure)
+	private bool CheckFail()
+	{
+		foreach (Pin pin in figure.pins) {
+			if (pin.position.x == 0 && pin.position.y == CurrentFigure.startY) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void CheckAll()
+	{
+		bool needDalay = false;
+		if (!needDalay) {
+			needDalay = CheckRings();
+		}
+		if (!needDalay) {
+			needDalay = CheckLines();
+		}
+		if (!needDalay) {
+			needDalay = CheckGroups();
+		}
+		if (!needDalay) {
+			needDalay = CheckHexagons();
+		}
+		
+		if (needDalay) {
+			StartDelay();
+		} else {
+			levelController.OnConnectFinish();
+		}
+	}
+	
+	private void StartDelay()
+	{
+		delayEndTime = Time.timeSinceLevelLoad + 0.3f;
+	}
+	
+	public void Update()
+	{
+		if (delayEndTime != 0 && Time.timeSinceLevelLoad >= delayEndTime) {
+			delayEndTime = 0;
+			CheckAll();
+		}
+	}
+	
+	public bool CheckRings()
 	{
 		// reset pinMap
 		for (int i = 0; i < 41; i++) {
@@ -105,7 +149,7 @@ public class Core : MonoBehaviour {
 		
 		// figure pins rings
 		HashSet<int> ringNumsSet = new HashSet<int>();
-		foreach (Pin pin in _figure.pins) {
+		foreach (Pin pin in checkPins) {
 			ringNumsSet.Add(RingNum(pin.position));
 		}
 		int [] ringNums = new int[ringNumsSet.Count];
@@ -153,55 +197,77 @@ public class Core : MonoBehaviour {
 		newPins.CopyTo(figure.pins, 0);
 		
 		foreach (Pin pin in removePins) {
-			Destroy(pin.gameObject);
+			pin.DestroyPin();
 		}
 		
 		// move up rings
+		LinkedList<Pin> newCheckPins = new LinkedList<Pin>();
 		foreach(int ring in foundRingNumsSet) {
 			for (int pn = 0; pn < figure.pins.Length; pn++) {
 				Pin pin = figure.pins[pn];
 				// up
 				if (pin.position.x >= -ring &&
 				    pin.position.y > pin.position.x + ring) {
-					figure.pins[pn].position = pin.position + new Vector2(1, 0);
+					figure.pins[pn].MoveOn(new Vector2(1, 0));
+					newCheckPins.AddLast(pin);
 				}
 				// right up
 				else if (pin.position.y <= pin.position.x + ring &&
 				    pin.position.y > ring) {
-					figure.pins[pn].position = pin.position + new Vector2(0, -1);
+					figure.pins[pn].MoveOn(new Vector2(0, -1));
+					newCheckPins.AddLast(pin);
 				}
 				// right down
 				else if (pin.position.x > ring &&
 				    pin.position.y <= ring) {
-					figure.pins[pn].position = pin.position + new Vector2(-1, -1);
+					figure.pins[pn].MoveOn(new Vector2(-1, -1));
+					newCheckPins.AddLast(pin);
 				}
 				// down
 				else if (pin.position.x <= ring &&
 				    pin.position.y < pin.position.x - ring) {
-					figure.pins[pn].position = pin.position + new Vector2(-1, 0);
+					figure.pins[pn].MoveOn(new Vector2(-1, 0));
+					newCheckPins.AddLast(pin);
 				}
 				// left down
 				else if (pin.position.y < -ring &&
 				    pin.position.y >= pin.position.x - ring) {
-					figure.pins[pn].position = pin.position + new Vector2(0, 1);
+					figure.pins[pn].MoveOn(new Vector2(0, 1));
+					newCheckPins.AddLast(pin);
 				}
 				// left up
 				else if (pin.position.y >= -ring &&
 				    pin.position.x < -ring) {
-					figure.pins[pn].position = pin.position + new Vector2(1, 1);
+					figure.pins[pn].MoveOn(new Vector2(1, 1));
+					newCheckPins.AddLast(pin);
 				}
 			}
 		}
+		checkPins = new Pin[newCheckPins.Count];
+		newCheckPins.CopyTo(checkPins, 0);
 
 		figure.UpdatePosition();
 		
 		if (removePins.Count > 0) {
 			Game.GetInstance().GetLevelController().AddScore(removePins.Count);
-			
-			if (breakAudioClip != null) {
-				audio.PlayOneShot(breakAudioClip);
-			}
 		}
+		
+		return checkPins.Length > 0;
+	}
+	
+	public bool CheckLines()
+	{
+		return false;	
+	}
+	
+	public bool CheckGroups()
+	{
+		return false;	
+	}
+	
+	public bool CheckHexagons()
+	{
+		return false;	
 	}
 	
 	private int RingNum(Vector2 pos)
