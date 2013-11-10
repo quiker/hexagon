@@ -40,14 +40,19 @@ public class LevelMenuController : AbstractPanelMenu {
 	// When button will be create
 	void onButtonDraw(Transform button) {	
 		int levelIndex = Convert.ToInt32(button.name);
+				
+		UILabel uiLabel = button.Find("levelIndex").GetComponent<UILabel>();
+		UILabel record  = button.Find("record").GetComponent<UILabel>();
 		
-		UILabel uiLabel= button.Find("levelIndex").GetComponent<UILabel>();
-		
-		bool isEnabledLevel = SettingsContainer.GetLevelStars(levelIndex) > 0 || levelIndex == 1;
+		bool isEnabledLevel = SettingsContainer.GetLevelStars(levelIndex) > 0 || 
+							  levelIndex == 1 || 
+							  SettingsContainer.GetLevelMaxScore(levelIndex) > 0 ||
+							  (levelIndex > 1 && SettingsContainer.GetLevelMaxScore(levelIndex - 1) > 0);
 		
 		setButtonEnable(button, isEnabledLevel);
 		setButtonMessage(button, isEnabledLevel);	
-		
+			
+		record.text = isEnabledLevel ? SettingsContainer.GetLevelMaxScore(levelIndex).ToString() : "";
 		uiLabel.text = isEnabledLevel ? levelIndex.ToString() : "Locked";
 	}
 	
