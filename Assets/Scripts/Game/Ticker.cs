@@ -20,6 +20,11 @@ public class Ticker : MonoBehaviour {
 		tick = startTick;
 	}
 	
+	public void SetTick(float tick)
+	{
+		this.tick = tick;
+	}
+	
 	void DoTick() {
 		foreach (GameObject listener in listeners ) {
 			(listener.GetComponent(typeof(TickListener)) as TickListener).OnTick();

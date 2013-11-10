@@ -1,11 +1,14 @@
 {
 	"id": 1,
-	"name": "test",
+	"name": "test1",
 	"star1": 120,
 	"star2": 240,
 	"star3": 280,
 	"figureLimit": 20,
 	"tick": 1000,
+	"lineLength": 3,
+	"groupSize": 3,
+	"enableHexagons": 1,
 	"colors": [1, 2, 3],
 	"pins": [
 		[0, 0, 1, 1],

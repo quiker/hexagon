@@ -20,7 +20,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	private int tick = 0;
 	private int lineLength = 0;
 	private int groupSize = 0;
-	private int enabledHexagons = 0;
+	private int enableHexagons = 0;
 	private int[] colors;
 	private int score = 0;
 	
@@ -40,10 +40,18 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	public void OnConnectFinish()
 	{
 		currentFigure.NewFigure();
+		figureLimit--;
 		ticker.Resume();
 		
-		// check level is completed
-		//LevelComplete();
+		int mobCount = 0;
+		foreach(Pin pin in core.figure.pins) {
+			if (pin.type != Pin.PIN_TYPE_PILL) {
+				mobCount++;
+			}
+		}
+		if (mobCount == 0) {
+			LevelComplete();
+		}
 	}
 	
 	private void LoadLevel(int level)
@@ -55,13 +63,17 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		TextAsset asset = Resources.Load("Levels/level_"+level, typeof(TextAsset)) as TextAsset;
 		var N = JSONNode.Parse(asset.text);
 		
-		id          = N["id"].AsInt;
-		name        = N["name"];
-		star1       = N["star1"].AsInt;
-		star2       = N["star2"].AsInt;
-		star3       = N["star3"].AsInt;
-		figureLimit = N["figureLimit"].AsInt;
-		tick        = N["tick"].AsInt;
+		id             = N["id"].AsInt;
+		name           = N["name"];
+		star1          = N["star1"].AsInt;
+		star2          = N["star2"].AsInt;
+		star3          = N["star3"].AsInt;
+		figureLimit    = N["figureLimit"].AsInt;
+		lineLength     = N["lineLength"].AsInt;
+		groupSize      = N["groupSize"].AsInt;
+		enableHexagons = N["enableHexagons"].AsInt;
+		tick           = N["tick"].AsInt;
+		ticker.SetTick(tick / 1000f);
 		
 		colors = new int[N["colors"].Count];
 		for(int i = 0; i < N["colors"].Count; i++) {
@@ -92,7 +104,8 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		if (score >= star1) stars = 1;
 		if (score >= star2) stars = 2;
 		if (score >= star3) stars = 3;
-		Debug.Log (stars);
+		SettingsContainer.SetLevelMaxScore(id, score);
+		SettingsContainer.SetLevelStars(id, stars);
 		Game.GetInstance().CompleteScreen(score, stars);
 	}
 	

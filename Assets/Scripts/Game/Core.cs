@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class Core : MonoBehaviour
 {
-	private Figure figure;
+	[HideInInspector]
+	public Figure figure;
 	private Vector2[][] rings;
 	private int[,] pinMap = new int[41,41];
 	private float delayEndTime = 0;
@@ -72,11 +73,7 @@ public class Core : MonoBehaviour
 	}
 	
 	public void Connect(Figure _figure)
-	{
-		if (connectAudioClip != null) {
-			audio.PlayOneShot(connectAudioClip);
-		}
-		
+	{	
 		checkPins = _figure.pins;
 		_figure.ConnectTo(figure);
 		
@@ -250,6 +247,9 @@ public class Core : MonoBehaviour
 		
 		if (removePins.Count > 0) {
 			Game.GetInstance().GetLevelController().AddScore(removePins.Count);
+			audio.PlayOneShot(breakAudioClip);
+		} else {
+			audio.PlayOneShot(connectAudioClip);
 		}
 		
 		return checkPins.Length > 0;

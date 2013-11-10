@@ -52,7 +52,7 @@ public class SettingsContainer {
 	public static string GetScoreTableLabel(int row)
 	{
 		if (row >= 0 && row < 10) {
-			return PlayerPrefs.GetString("score_table_"+row+"_label", 0);
+			return PlayerPrefs.GetString("score_table_"+row+"_label", "");
 		}
 		return "";
 	}
