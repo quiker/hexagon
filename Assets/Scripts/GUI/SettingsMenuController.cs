@@ -6,6 +6,8 @@ public class SettingsMenuController : AbstractPanelMenu {
 	public UISlider musicValue;
 	public UISlider soundsValue;
 	
+	private bool Show = false;
+	
 	void onMuteChecked(GameObject go) {
 		if (mute != null) {
 			Game.GetInstance().SetMute(mute.isChecked);
@@ -13,28 +15,26 @@ public class SettingsMenuController : AbstractPanelMenu {
 	}
 			
 	void onMusicValueChange(float value) {
-		if (Game.GetInstance().getState() == "settings") {
-			Game.GetInstance().SetMusicValue(value);
-		}
+		Game.GetInstance().SetMusicValue(value);
 	}
 	
 	void onSoundValueChange(float value) {
-		if (Game.GetInstance().getState() == "settings") {
-			Game.GetInstance().SetSoundValue(value);
-		}
+		Game.GetInstance().SetSoundValue(value);
 	}
 	
 	void Start() {
 		if (musicValue != null) {
 			musicValue.sliderValue = SettingsContainer.GetMusicValue();
+			musicValue.initialValue = SettingsContainer.GetMusicValue();
 		}
 		
 		if (soundsValue != null) {
 			soundsValue.sliderValue = SettingsContainer.GetSoundValue();
+			soundsValue.initialValue = SettingsContainer.GetSoundValue();
 		}
 	}
 	
-	void OnGUI() {	
+	void OnGUI() {
 		if (mute != null) {
 			mute.isChecked = SettingsContainer.GetMuteFlag();
 		}
