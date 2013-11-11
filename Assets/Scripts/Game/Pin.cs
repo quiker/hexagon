@@ -3,37 +3,75 @@ using System.Collections;
 
 public class Pin : MonoBehaviour
 {
+	// constants
 	public const int PIN_TYPE_PILL = 1;
 	public const int PIN_TYPE_MOB1 = 2;
 	public const int PIN_TYPE_MOB2 = 3;
 	public const int PIN_TYPE_MOB3 = 4;
 	
-	public int color;
-	public int type;
+	// inspector fields
 	public GameObject pillSprite =  null;
 	public GameObject splashSprite =  null;
 	public GameObject[] mobSprites =  null;
-
-	public Vector2 position;
-	private float destroyTime = 0;
 	
+	
+	private int _color = 0;
+	public int color {
+		get {
+			return this._color;
+		}
+		set {
+			if (_color != value) {
+				_color = value;
+				UpdateSprite();
+			}
+		}
+	}
+	private int _type = 0;
+	public int type {
+		get {
+			return this._type;
+		}
+		set {
+			if (_type != value) {
+				_type = value;
+				UpdateSprite();
+			}
+		}
+	}
+	private Vector2 _position;
+	public Vector2 position {
+		get {
+			return this._position;
+		}
+		set {
+			if (_position != value) {
+				_position = value;
+				UpdatePosition();
+			}
+		}
+	}
+
+	private float destroyTime = 0;
 	// interpolation movement
 	private bool inMoving = false;
 	private float startTime;
 	private Vector3 startPos;
 	private Vector3 endPos;
 	
-	// Use this for initialization
-	void Start () {
-		SetType(type, false);
-		SetColor(color);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+//	void Start ()
+//	{
+//		SetType(type, false);
+//		SetColor(color);
+//	}
+
+	void Update ()
+	{
+		// destroing
 		if (Time.timeSinceLevelLoad >= destroyTime && destroyTime != 0) {
 			Destroy(gameObject);
 		}
+		// moving
 		if (inMoving) {
 			float tLerp = Time.timeSinceLevelLoad - startTime;
 			float seconds = 0.3f;
@@ -46,34 +84,18 @@ public class Pin : MonoBehaviour
 		}
 	}
 	
-	public void SetColor(int color, bool updateSprite = true)
+	private void UpdateSprite() 
 	{
-		this.color = color;
-		
-		if (updateSprite) {
-			UpdateSprite();
-		}
-	}
-	
-	public void SetType(int type, bool updateSprite = true)
-	{
-		this.type = type;
-		if (updateSprite) {
-			UpdateSprite();
-		}
-	}
-	
-	public void UpdateSprite() 
-	{	
-		if (type == PIN_TYPE_PILL) {
+		if (_type == 0 || _color == 0) return;
+		if (_type == PIN_TYPE_PILL) {
 			foreach (GameObject mobSprite in mobSprites) {
 				mobSprite.SetActive(false);
 			}
 			pillSprite.SetActive(true);
-			Vector2 offset = new Vector2 ((color-1) * 0.1f, 1.0f);
+			Vector2 offset = new Vector2 ((_color-1) * 0.1f, 1.0f);
 			pillSprite.renderer.material.SetTextureOffset ("_MainTex", offset);
 		} else {
-			mobSprites[(type-2)*5+color-1].SetActive(true);
+			mobSprites[(_type-2)*5+_color-1].SetActive(true);
 			pillSprite.SetActive(false);
 		}
 	}
@@ -92,13 +114,13 @@ public class Pin : MonoBehaviour
 	{
 		startTime = Time.timeSinceLevelLoad;
 		startPos = transform.localPosition;
-		position += vector;
-		endPos = HexVector2.ConvertHexVector(position);
+		_position += vector;
+		endPos = HexVector2.ConvertHexVector(_position);
 		inMoving = true;
 	}
 	
 	public void UpdatePosition()
 	{
-		transform.localPosition = HexVector2.ConvertHexVector(position);
+		transform.localPosition = HexVector2.ConvertHexVector(_position);
 	}
 }
