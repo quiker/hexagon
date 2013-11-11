@@ -43,6 +43,7 @@ public class LevelMenuController : AbstractPanelMenu {
 				
 		UILabel uiLabel = button.Find("levelIndex").GetComponent<UILabel>();
 		UILabel record  = button.Find("record").GetComponent<UILabel>();
+		Stars stars     = button.Find("PanelStars").GetComponent<Stars>();  
 		
 		bool isEnabledLevel = SettingsContainer.GetLevelStars(levelIndex) > 0 || 
 							  levelIndex == 1 || 
@@ -51,7 +52,8 @@ public class LevelMenuController : AbstractPanelMenu {
 		
 		setButtonEnable(button, isEnabledLevel);
 		setButtonMessage(button, isEnabledLevel);	
-			
+		
+		stars.updateStars(SettingsContainer.GetLevelStars(levelIndex));
 		record.text = isEnabledLevel ? SettingsContainer.GetLevelMaxScore(levelIndex).ToString() : "";
 		uiLabel.text = isEnabledLevel ? levelIndex.ToString() : "Locked";
 	}

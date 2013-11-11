@@ -160,6 +160,7 @@ public class Game : MonoBehaviour
 		StopTime();
 		DisableInput();
 		(completePanel as CompleteScreenController).updateScore(score);
+		(completePanel as CompleteScreenController).updateStars(stars);
 		// save highscore
 		// save score to score table
 		ActivatePanel("complete");
