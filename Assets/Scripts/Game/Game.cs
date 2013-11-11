@@ -47,7 +47,7 @@ public class Game : MonoBehaviour
 	private string state = "";
 	
 	void Start() {
-		EnableAudioListener(SettingsContainer.GetMuteFlag());
+		EnableAudioListener(!SettingsContainer.GetMuteFlag());
 		MenuMainMenu();
 	}
 	
@@ -124,7 +124,7 @@ public class Game : MonoBehaviour
 		
 		/* On / Off music */
 		if (mainThemeSong != null) {
-			EnableAudioListener(musicOnPauseMenu && SettingsContainer.GetMuteFlag());
+			EnableAudioListener(musicOnPauseMenu && !SettingsContainer.GetMuteFlag());
 		}
 		
 		SendMessageToAllGameObjects("onLevelPaused", true);
@@ -140,7 +140,7 @@ public class Game : MonoBehaviour
 		
 		/* On / Off music */
 		if (mainThemeSong != null) {
-			EnableAudioListener(SettingsContainer.GetMuteFlag());
+			EnableAudioListener(!SettingsContainer.GetMuteFlag());
 		}		
 		
 		SendMessageToAllGameObjects("onLevelPaused", false);
@@ -241,8 +241,8 @@ public class Game : MonoBehaviour
     }
 	
 	public void SetMute(bool isMute) {
-		if (SettingsContainer.GetMuteFlag() != !isMute) {
-			SettingsContainer.SetMuteFlag(!isMute);
+		if (SettingsContainer.GetMuteFlag() != isMute) {
+			SettingsContainer.SetMuteFlag(isMute);
 			
 			if (mainThemeSong != null) {
 				if (musicOnPauseMenu) {

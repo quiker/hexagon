@@ -14,7 +14,7 @@ public class PauseMenuController : AbstractPanelMenu {
 	
 	public void onMuteChecked(GameObject go) {
 		if (songCheckbox != null) {
-			Game.GetInstance().SetMute(!songCheckbox.isChecked);
+			Game.GetInstance().SetMute(songCheckbox.isChecked);
 		}
 	}
 	

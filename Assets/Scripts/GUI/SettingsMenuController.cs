@@ -8,7 +8,7 @@ public class SettingsMenuController : AbstractPanelMenu {
 	
 	void onMuteChecked(GameObject go) {
 		if (mute != null) {
-			Game.GetInstance().SetMute(!mute.isChecked);
+			Game.GetInstance().SetMute(mute.isChecked);
 		}
 	}
 			
