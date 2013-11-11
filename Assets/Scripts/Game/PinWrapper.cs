@@ -16,12 +16,6 @@ public class PinWrapper : MonoBehaviour {
 		}
 	}
 	
-	public void OnAnimate()
-	{
-		StopAll();
-		
-	}
-	
 	public void StopAll()
 	{
 		animation.Stop();

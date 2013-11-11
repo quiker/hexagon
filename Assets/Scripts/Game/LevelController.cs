@@ -7,7 +7,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 {
 	public Core core = null;
 	public CurrentFigure currentFigure = null;
-	public LevelFactory levelFactory = null;
+	public PinFactory pinFactory = null;
 	public FigureFactory figureFactory = null;
 	public Ticker ticker = null;
 	
@@ -22,6 +22,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	private int groupSize = 0;
 	private int enableHexagons = 0;
 	private int[] colors;
+	private int[][] actions;
 	private int score = 0;
 	
 	public UIController ui = null;
@@ -82,13 +83,22 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		
 		int[][] pins = new int[N["pins"].Count][];
 		for(int i = 0; i < N["pins"].Count; i++) {
-			pins[i] = new int[4];
-			for(int j = 0; j < 4; j++) {
+			pins[i] = new int[N["pins"][i].Count];
+			for(int j = 0; j < N["pins"][i].Count; j++) {
 				pins[i][j] = N["pins"][i][j].AsInt;
 			}
 		}
 		
-		Pin[] pinArr = levelFactory.GetLevel(core, pins);
+		actions = new int[N["actions"].Count][];
+		for(int i = 0; i < N["actions"].Count; i++) {
+			actions[i] = new int[N["actions"][i].Count];
+			for(int j = 0; j < N["actions"][i].Count; j++) {
+				actions[i][j] = N["actions"][i][j].AsInt;
+			}
+		}
+		pinFactory.SetActions(actions);
+		
+		Pin[] pinArr = pinFactory.GetPins(core.GetComponent<Figure>(), pins);
 		
 		core.SetPins(pinArr);
 		

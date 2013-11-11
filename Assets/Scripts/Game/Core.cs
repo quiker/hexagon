@@ -97,6 +97,9 @@ public class Core : MonoBehaviour
 	
 	private void CheckAll()
 	{
+		// update pinMap
+		pinMap = figure.GetPinMap();
+		
 		bool needDalay = false;
 		if (!needDalay) {
 			needDalay = CheckRings();
@@ -132,18 +135,7 @@ public class Core : MonoBehaviour
 	}
 	
 	public bool CheckRings()
-	{
-		// reset pinMap
-		for (int i = 0; i < 41; i++) {
-			for (int j = 0; j < 41; j++) {
-				pinMap[i,j] = -1;
-			}
-		}
-		// update pinMap
-		foreach (Pin pin in figure.pins) {
-			pinMap[(int)pin.position.x+21, (int)pin.position.y+21] = pin.color;
-		}
-		
+	{	
 		// figure pins rings
 		HashSet<int> ringNumsSet = new HashSet<int>();
 		foreach (Pin pin in checkPins) {
@@ -160,7 +152,7 @@ public class Core : MonoBehaviour
 			bool found = true;
 			if (ringNum >= rings.Length) continue;
 			foreach (Vector2 pos in rings[ringNum-1]) {
-				if (pinMap[(int)pos.x+21, (int)pos.y+21] == -1) {
+				if (pinMap[(int)pos.x+21, (int)pos.y+21] == 0) {
 					found = false;
 					break;
 				}

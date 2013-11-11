@@ -31,6 +31,30 @@ public class Figure : MonoBehaviour
 		}
 	}
 	
+	public void AddPin(Pin pin)
+	{
+		Array.Resize< Pin >(ref pins, pins.Length + 1);
+		pins[pins.Length-1] = pin;
+	}
+	
+	public int[,] GetPinMap()
+	{
+		int[,] pinMap = new int[41,41];
+		
+		// reset pinMap
+		for (int i = 0; i < 41; i++) {
+			for (int j = 0; j < 41; j++) {
+				pinMap[i,j] = 0;
+			}
+		}
+		// update pinMap
+		foreach (Pin pin in pins) {
+			pinMap[(int)pin.position.x+21, (int)pin.position.y+21] = pin.color;
+		}
+		
+		return pinMap;
+	}
+	
 	public void MoveUp()
 	{
 		position.y ++;
