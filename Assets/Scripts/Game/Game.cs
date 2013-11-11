@@ -47,7 +47,7 @@ public class Game : MonoBehaviour
 	private string state = "";
 	
 	void Start() {
-		EnableAudioListener(SettingsContainer.GetMusicFlag());
+		EnableAudioListener(SettingsContainer.GetMuteFlag());
 		MenuMainMenu();
 	}
 	
@@ -124,8 +124,8 @@ public class Game : MonoBehaviour
 		
 		/* On / Off music */
 		if (mainThemeSong != null) {
-			EnableAudioListener(musicOnPauseMenu && SettingsContainer.GetMusicFlag());
-		}		
+			EnableAudioListener(musicOnPauseMenu && SettingsContainer.GetMuteFlag());
+		}
 		
 		SendMessageToAllGameObjects("onLevelPaused", true);
 	}
@@ -140,7 +140,7 @@ public class Game : MonoBehaviour
 		
 		/* On / Off music */
 		if (mainThemeSong != null) {
-			EnableAudioListener(SettingsContainer.GetMusicFlag());
+			EnableAudioListener(SettingsContainer.GetMuteFlag());
 		}		
 		
 		SendMessageToAllGameObjects("onLevelPaused", false);
@@ -241,13 +241,15 @@ public class Game : MonoBehaviour
     }
 	
 	public void SetMute(bool isMute) {
-		if (SettingsContainer.GetMusicFlag() != !isMute) {
-			SettingsContainer.SetMusicFlag(!isMute);
+		if (SettingsContainer.GetMuteFlag() != !isMute) {
+			SettingsContainer.SetMuteFlag(!isMute);
+			
 			if (mainThemeSong != null) {
 				if (musicOnPauseMenu) {
 					EnableAudioListener(!isMute);
 				}
 			}
+			
 			SendMessageToAllGameObjects("onGameMute", isMute);
 		}
 	}
@@ -263,6 +265,8 @@ public class Game : MonoBehaviour
 	}
 	
 	public void EnableAudioListener(bool enabled) {
+		Camera cam = GameObject.FindObjectOfType(typeof(Camera)) as Camera;
+		cam.audio.enabled = enabled;
 		AudioListener.volume = enabled ? 1 : 0;
 	}
 	
@@ -275,5 +279,26 @@ public class Game : MonoBehaviour
 				default: MenuMainMenu(); break;					
 			}
 		}
+	}
+	
+	public void SetMusicValue(float value) {
+		if (mainThemeSong != null) {
+			mainThemeSong.audio.volume = value;
+		}
+		
+		SettingsContainer.SetMusicValue(value);
+	}
+	
+	public void SetSoundValue(float value) {
+		float mainThemeSongVolume = mainThemeSong.audio.volume; 
+			
+		foreach (AudioSource aud in GameObject.FindObjectsOfType(typeof(AudioSource))) {
+			aud.volume = value;
+		}
+		
+		SettingsContainer.SetSoundValue(value);
+		
+		mainThemeSong.audio.volume = mainThemeSongVolume;
+		
 	}
 }

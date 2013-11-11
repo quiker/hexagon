@@ -6,42 +6,37 @@ public class SettingsMenuController : AbstractPanelMenu {
 	public UISlider musicValue;
 	public UISlider soundsValue;
 	
-	void onMuteChecked(bool isChecked) {
+	void onMuteChecked(GameObject go) {
 		if (mute != null) {
-			Game.GetInstance().SetMute(!isChecked);
+			Game.GetInstance().SetMute(!mute.isChecked);
 		}
 	}
 			
 	void onMusicValueChange(float value) {
-		Game.GetInstance().mainThemeSong.audio.volume = value;
+		if (Game.GetInstance().getState() == "settings") {
+			Game.GetInstance().SetMusicValue(value);
+		}
 	}
 	
 	void onSoundValueChange(float value) {
-		foreach (AudioSource aud in GameObject.FindObjectsOfType(typeof(AudioSource))) {
-			aud.volume = value;
+		if (Game.GetInstance().getState() == "settings") {
+			Game.GetInstance().SetSoundValue(value);
 		}
-		
-		Game.GetInstance().mainThemeSong.audio.volume = musicValue.sliderValue;
 	}
-	
 	
 	void Start() {
-		if (mute != null) {
-			mute.startsChecked = SettingsContainer.GetMusicFlag();
-		}
-	}
-	
-	void OnEnable() {
-		if (mute != null) {
-			mute.isChecked = SettingsContainer.GetMusicFlag();
-		}
-		
 		if (musicValue != null) {
-			//musicValue.sliderValue = SettingsContainer.GetMusicValue();
+			musicValue.sliderValue = SettingsContainer.GetMusicValue();
 		}
 		
 		if (soundsValue != null) {
-			//soundsValue.sliderValue = SettingsContainer.GetSoundValue();
+			soundsValue.sliderValue = SettingsContainer.GetSoundValue();
+		}
+	}
+	
+	void OnGUI() {	
+		if (mute != null) {
+			mute.isChecked = SettingsContainer.GetMuteFlag();
 		}
 	}
 }

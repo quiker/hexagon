@@ -1,9 +1,9 @@
 {
 	"id": 1,
 	"name": "test1",
-	"star1": 120,
-	"star2": 240,
-	"star3": 280,
+	"star1": 6,
+	"star2": 12,
+	"star3": 18,
 	"figureLimit": 20,
 	"tick": 1000,
 	"lineLength": 3,

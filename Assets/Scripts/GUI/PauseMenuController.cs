@@ -12,9 +12,9 @@ public class PauseMenuController : AbstractPanelMenu {
 		Game.GetInstance().MenuMainMenu();
 	}
 	
-	public void onMuteChecked(bool isChecked) {
+	public void onMuteChecked(GameObject go) {
 		if (songCheckbox != null) {
-			Game.GetInstance().SetMute(!isChecked);
+			Game.GetInstance().SetMute(!songCheckbox.isChecked);
 		}
 	}
 	
@@ -22,15 +22,9 @@ public class PauseMenuController : AbstractPanelMenu {
 		Game.GetInstance().MenuRestart();
 	}
 	
-	void Start() {
+	void OnGUI() {
 		if (songCheckbox != null) {
-			songCheckbox.startsChecked = SettingsContainer.GetMusicFlag();
-		}
-	}
-	
-	void OnEnable() {
-		if (songCheckbox != null) {
-			songCheckbox.isChecked = SettingsContainer.GetMusicFlag();
+			songCheckbox.isChecked = SettingsContainer.GetMuteFlag();
 		}
 	}
 }

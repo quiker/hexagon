@@ -77,4 +77,28 @@ public class SettingsContainer
 	{
 		PlayerPrefs.SetInt("last_completed_level", level);
 	}
+	
+	public static void SetMuteFlag(bool flag) {
+		PlayerPrefs.SetInt("mute_flag", flag ? 1 : 0);
+	}	
+	
+	public static bool GetMuteFlag() {
+		return PlayerPrefs.GetInt("mute_flag", 0) == 1;
+	}
+	
+	public static void SetMusicValue(float value) {
+		PlayerPrefs.SetFloat("music_value", value);
+	}
+	
+	public static void SetSoundValue(float value) {
+		PlayerPrefs.SetFloat("sound_value", value);
+	}
+	
+	public static float GetMusicValue() {
+		return PlayerPrefs.GetFloat("music_value", 1);
+	}
+	
+	public static float GetSoundValue() {
+		return PlayerPrefs.GetFloat("sound_value", 1);
+	}
 }
