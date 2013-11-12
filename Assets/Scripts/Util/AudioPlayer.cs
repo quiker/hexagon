@@ -23,7 +23,7 @@ public class AudioPlayer : MonoBehaviour {
 	private void playClipByIndex(int index) {
 		currentPlaylistIndex = index;
 		audio.clip = playlist[index];		
-		play();
+		audio.Play();
 	}
 	
 	private void onClipComplete() {
@@ -40,17 +40,7 @@ public class AudioPlayer : MonoBehaviour {
 		playClipByIndex(currentPlaylistIndex);
 	}
 	
-		
-	private void pause() {
-		audio.Pause();
-	}
-	
-	
-	private void play() {
-		audio.Play();
-	}
-	
-	public void setMute(bool isMute) {
-		audio.volume = (isMute ? 0 : 1);
+	public void resetPlaylist() {
+		currentPlaylistIndex = -1;
 	}
 }

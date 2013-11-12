@@ -14,8 +14,10 @@ public class CompleteScreenController : AbstractPanelMenu {
 	}
 		
 	public void updateScore(int score) {
-		if (scoreLabel != null) {
-			scoreLabel.text = "Result: " + score.ToString();	
+		if (score > SettingsContainer.GetLevelMaxScore(Game.GetInstance().GetCurrentLevel())) {
+			scoreLabel.text = "[00BB00]New highscore:[-] " + score.ToString();
+		}else{
+			scoreLabel.text = "Result: " + score.ToString();
 		}
 	}
 	

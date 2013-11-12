@@ -44,6 +44,9 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		figureLimit--;
 		ticker.Resume();
 		
+		// Update figure limit
+		ui.updateFigureLimit(figureLimit);
+		
 		int mobCount = 0;
 		foreach(Pin pin in core.figure.pins) {
 			if (pin.type != Pin.PIN_TYPE_PILL) {
@@ -114,14 +117,21 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		if (score >= star1) stars = 1;
 		if (score >= star2) stars = 2;
 		if (score >= star3) stars = 3;
+		Game.GetInstance().CompleteScreen(score, stars);
+		
 		SettingsContainer.SetLevelMaxScore(id, score);
 		SettingsContainer.SetLevelStars(id, stars);
-		Game.GetInstance().CompleteScreen(score, stars);
 	}
 	
 	private void onLevelStarted(int level)
 	{
 		LoadLevel(level);
+		
+		// Show highscore
+		ui.updateHighscore(SettingsContainer.GetLevelMaxScore(level));
+		
+		// Show figure Limit
+		ui.updateFigureLimit(figureLimit);
 	}
 	
 	public void AddScore(int type, int mobs)

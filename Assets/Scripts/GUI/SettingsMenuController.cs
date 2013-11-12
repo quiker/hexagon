@@ -5,9 +5,7 @@ public class SettingsMenuController : AbstractPanelMenu {
 	public UICheckbox mute;
 	public UISlider musicValue;
 	public UISlider soundsValue;
-	
-	private bool Show = false;
-	
+		
 	void onMuteChecked(GameObject go) {
 		if (mute != null) {
 			Game.GetInstance().SetMute(mute.isChecked);
