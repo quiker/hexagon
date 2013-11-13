@@ -18,7 +18,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	private int star3 = 0;
 	private int figureLimit = 0;
 	private int tick = 0;
-	private int lineLength = 0;
+	public int lineLength = 0;
 	private int groupSize = 0;
 	private int enableHexagons = 0;
 	private int[] colors;
@@ -113,6 +113,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	protected void LevelComplete()
 	{
 		// calculate stars
+		score = Math.Max(figureLimit * 10, 0);
 		int stars = 0;
 		if (score >= star1) stars = 1;
 		if (score >= star2) stars = 2;

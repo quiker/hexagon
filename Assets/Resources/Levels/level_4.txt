@@ -6,7 +6,7 @@
 	"star3": 28,
 	"figureLimit": 20,
 	"tick": 1000,
-	"lineLength": 3,
+	"lineLength": 4,
 	"groupSize": 3,
 	"enableHexagons": 1,
 	"actions": [],
