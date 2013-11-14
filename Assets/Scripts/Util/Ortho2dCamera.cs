@@ -10,25 +10,34 @@ internal class Ortho2dCamera : MonoBehaviour
 
 	private void Awake()
 	{
-    	camera.orthographic = true;
+		camera.orthographic = true;
 
-		if (uniform)
+		if (uniform) {
 			SetUniform();
+		}
   	} 
 	private void LateUpdate()
 	{
-		if (autoSetUniform && uniform)
+		if (autoSetUniform && uniform) {
 			SetUniform();
+		}
 	} 
 	private void SetUniform()
 	{
 		float orthographicSize;
-		if (devMode) {
+
+		if ( camera.pixelWidth * 3 / 2 / camera.pixelHeight >= 1) {
 			orthographicSize = 480;
 		} else {
-			orthographicSize = camera.pixelHeight/2;
+			orthographicSize = 480 / (camera.pixelWidth * 3 / 2 / camera.pixelHeight);
 		}
-		if (orthographicSize != camera.orthographicSize)
+
+		if (devMode) {
+			orthographicSize = 480;
+		}
+
+		if (orthographicSize != camera.orthographicSize) {
 			camera.orthographicSize = orthographicSize;
+		}
 	}
 }
