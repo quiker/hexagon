@@ -40,9 +40,9 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	
 	public void OnConnectFinish()
 	{
+		ticker.Resume();
 		currentFigure.NewFigure();
 		figureLimit--;
-		ticker.Resume();
 		
 		// Update figure limit
 		ui.updateFigureLimit(figureLimit);

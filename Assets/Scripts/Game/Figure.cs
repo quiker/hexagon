@@ -11,9 +11,12 @@ public class Figure : MonoBehaviour
 	public Vector2 position;
 	public AudioClip rotateAudioClip = null;
 	
+	private PinWrapper pw;
+	
 	// Use this for initialization
 	public void Init (int x, int y) {
 		position = new Vector2(x, y);
+		pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
 	}
 	
 	public void Reinit () {
@@ -25,6 +28,7 @@ public class Figure : MonoBehaviour
 	
 	public void UpdatePosition()
 	{
+		pw.StopAll();
 		transform.localPosition = HexVector2.ConvertHexVector(position);
 		foreach (Pin pin in pins) {
 			pin.UpdatePosition();
@@ -63,16 +67,14 @@ public class Figure : MonoBehaviour
 	
 	public void MoveDown()
 	{
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		position.y --;
 		pw.Play("TickSlideDown");
 	}
 	
 	public void MoveRightUp()
 	{
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		position.x ++;
 		position.y ++;
 		pw.Play("TickSlideRightUp");
@@ -80,24 +82,21 @@ public class Figure : MonoBehaviour
 	
 	public void MoveRightDown()
 	{
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		position.x ++;
 		pw.Play("TickSlideRightDown");
 	}
 	
 	public void MoveLeftUp()
 	{
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		position.x --;
 		pw.Play("TickSlideLeftUp");
 	}
 	
 	public void MoveLeftDown()
 	{
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		position.y --;
 		position.x --;
 		pw.Play("TickSlideLeftDown");
@@ -106,8 +105,7 @@ public class Figure : MonoBehaviour
 	public void RotateCCW()
 	{
 		audio.PlayOneShot(rotateAudioClip);
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		foreach (Pin pin in pins) {
 			pin.position = HexVector2.RotateCCW(pin.position);
 		}
@@ -117,8 +115,7 @@ public class Figure : MonoBehaviour
 	public void RotateCW()
 	{
 		audio.PlayOneShot(rotateAudioClip);
-		PinWrapper pw = transform.FindChild("PinWrapper").GetComponent("PinWrapper") as PinWrapper;
-		pw.StopAll();
+		UpdatePosition();
 		foreach (Pin pin in pins) {
 			pin.position = HexVector2.RotateCW(pin.position);
 		}

@@ -6,7 +6,7 @@ internal class Ortho2dCamera : MonoBehaviour
 {
 	[SerializeField] private bool uniform = true;
 	[SerializeField] private bool autoSetUniform = false;
-	private bool devMode = true;
+	private bool devMode = false;
 
 	private void Awake()
 	{

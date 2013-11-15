@@ -28,7 +28,7 @@ public class PinWrapper : MonoBehaviour {
 			pin.gameObject.animation.Stop();
 		}
 		
-		figure.UpdatePosition();
+		//figure.UpdatePosition();
 	}
 	
 }
