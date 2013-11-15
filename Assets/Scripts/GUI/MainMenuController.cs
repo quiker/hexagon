@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MainMenuController : AbstractPanelMenu {
@@ -44,7 +44,7 @@ public class MainMenuController : AbstractPanelMenu {
 	
 	// Achievements
 	void onAchievementsClick() {
-		Game.GetInstance().MenuAchievementsTable();
+		Game.GetInstance().MenuAchievements();
 	}
 	
 	public override MenuPanel getId() {

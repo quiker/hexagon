@@ -96,7 +96,7 @@ public class Game : MonoBehaviour
 		this.level = level;
 		MenuRestart();
 	}
-	public void MenuAchievementsTable()
+	public void MenuAchievements()
 	{
 		StopTime();
 		ActivatePanel(MenuPanel.Achievements);
