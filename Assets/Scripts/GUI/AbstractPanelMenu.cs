@@ -21,4 +21,6 @@ abstract public class AbstractPanelMenu : MonoBehaviour {
 	void onBackClick(GameObject button) {
 		Game.GetInstance().MenuMainMenu();
 	}
+	
+	abstract public MenuPanel getId();
 }

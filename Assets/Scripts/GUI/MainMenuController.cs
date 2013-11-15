@@ -2,6 +2,21 @@
 using System.Collections;
 
 public class MainMenuController : AbstractPanelMenu {
+	public GameObject startButton; 
+	public GameObject scoreButton;
+	public GameObject survivalModeButton;
+	public GameObject tutorialButton;
+	public GameObject settingsButton;
+	public GameObject quitButton;
+	public UILabel gameTitle;
+	public GameObject background;
+	
+	
+	void Start() {
+		// Hide button quit if current platform is iOS
+		quitButton.SetActive(Application.platform != RuntimePlatform.IPhonePlayer);
+	}
+	
 	// Start
 	void onStartClick() {
 		Game.GetInstance().MenuLevelScreen();
@@ -27,8 +42,12 @@ public class MainMenuController : AbstractPanelMenu {
 		Game.GetInstance().MenuTutorial();
 	}
 	
-	// Score
-	void onScoreClick() {
-		Game.GetInstance().MenuScoreTable();
+	// Achievements
+	void onAchievementsClick() {
+		Game.GetInstance().MenuAchievementsTable();
+	}
+	
+	public override MenuPanel getId() {
+		return MenuPanel.MainMenu;
 	}
 }

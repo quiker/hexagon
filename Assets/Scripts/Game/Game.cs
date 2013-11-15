@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Game : MonoBehaviour
 {
+	public enum GameMode {Normal, Survival}; 
+	public enum GameState {Menu, Playing, Pause};
 	private static Game _instance = null;
 	
 	protected Game () {}
@@ -23,17 +25,9 @@ public class Game : MonoBehaviour
 			_instance = new Game();
 		}
 		return _instance;
-	}
-	
-	public AbstractPanelMenu mainMenuPanel;
-	public AbstractPanelMenu selectLevelPanel;
-	public AbstractPanelMenu tutorialPanel;
-	public AbstractPanelMenu scoreTablePanel;
-	public AbstractPanelMenu settingsPanel;
-	public AbstractPanelMenu completePanel;
-	public AbstractPanelMenu failPanel;
-	public AbstractPanelMenu pauseMenu;
-	
+	}	
+	public AbstractPanelMenu[] panels;
+		
 	public UIController ui;
 	
 	public AudioPlayer mainThemeSong = null;	
@@ -43,8 +37,9 @@ public class Game : MonoBehaviour
 	public LevelController levelController;
 	
 	private int level = 0; 
-	private string mode = ""; 
-	private string state = "";
+	private GameMode mode; 
+	private GameState gameState;
+	private AbstractPanelMenu activePanel;
 	
 	void Start() {
 		EnableAudioListener(!SettingsContainer.GetMuteFlag());
@@ -59,33 +54,35 @@ public class Game : MonoBehaviour
 	public void MenuMainMenu()
 	{
 		StopTime();
-		ActivatePanel("mainMenu");
+		gameState = GameState.Menu;
+		ActivatePanel(MenuPanel.MainMenu);
 		SendMessageToAllGameObjects("onMainMenuShow");
 	}
 	
 	public void MenuLevelScreen()
 	{
 		StopTime();
-		mode = "level";
-		ActivatePanel("selectLevel");
+		mode = GameMode.Normal;
+		ActivatePanel(MenuPanel.Level);
 		SendMessageToAllGameObjects("onSelectLevelShow");
 	}
 	public void MenuSurvivalMode()
 	{
-		mode = "survival";
+		mode = GameMode.Survival;
 		MenuPause();
 		//---------------------
 	}
 	public void MenuTutorial()
 	{
 		StopTime();
-		ActivatePanel("tutorial");
+		ActivatePanel(MenuPanel.Tutorial);
+		
 		SendMessageToAllGameObjects("onTutorialShow");
 	}
 	public void MenuSettings()
 	{
 		StopTime();
-		ActivatePanel("settings");
+		ActivatePanel(MenuPanel.Settings);
 		SendMessageToAllGameObjects("onSettingsShow");
 	}
 	public void Quit()
@@ -99,49 +96,36 @@ public class Game : MonoBehaviour
 		this.level = level;
 		MenuRestart();
 	}
-	public void MenuScoreTable()
+	public void MenuAchievementsTable()
 	{
 		StopTime();
-		ActivatePanel("scoreTable");
-		GameObject gol;
-		GameObject gov;
-		for (int i = 0; i < 10; i++) {
-			gol = GameObject.FindGameObjectWithTag("SCORE_"+i+"_LABEL");
-			gov = GameObject.FindGameObjectWithTag("SCORE_"+i+"_VALUE");
-			SettingsContainer.GetScoreTableLabel(i); //
-			SettingsContainer.GetScoreTableValue(i); //
-		}
-		SendMessageToAllGameObjects("onScoreTable");
+		ActivatePanel(MenuPanel.Achievements);
+		SendMessageToAllGameObjects("onAchievementsTable");
 	}
 	public void MenuPause()
 	{
 		StopTime();
-		ActivatePanel("pause");
-		
-		if (input != null) {
-			input.SetActive(false);
-		}
+		gameState = GameState.Pause;
+		ActivatePanel(MenuPanel.Pause);
+		DisableInput();
 		
 		/* On / Off music */
-		if (mainThemeSong != null) {
-			EnableAudioListener(musicOnPauseMenu && !SettingsContainer.GetMuteFlag());
-		}
+		EnableAudioListener(musicOnPauseMenu && !SettingsContainer.GetMuteFlag());
 		
 		SendMessageToAllGameObjects("onLevelPaused", true);
 	}
 	public void MenuResume()
 	{
 		Time.timeScale = 1;
+		gameState = GameState.Playing;
 		StartTime();
 		Debug.Log ("Resume");
-		ActivatePanel("playing");
+		HidePanels();
 		EnableInput();
 		ui.gameObject.SetActive(true);
 		
 		/* On / Off music */
-		if (mainThemeSong != null) {
-			EnableAudioListener(!SettingsContainer.GetMuteFlag());
-		}		
+		EnableAudioListener(!SettingsContainer.GetMuteFlag());		
 		
 		SendMessageToAllGameObjects("onLevelPaused", false);
 	}
@@ -159,43 +143,54 @@ public class Game : MonoBehaviour
 	{
 		StopTime();
 		DisableInput();
-		(completePanel as CompleteScreenController).updateScore(score);
-		(completePanel as CompleteScreenController).updateStars(stars);
+		CompleteScreenController completePanel = GetPanelByName(MenuPanel.Complete) as CompleteScreenController;
+		
+		completePanel.updateScore(score);
+		completePanel.updateStars(stars);
+		
 		// save highscore
 		// save score to score table
-		ActivatePanel("complete");
+		ActivatePanel(MenuPanel.Complete);
 	}
 	public void FailScreen()
 	{
 		StopTime();
 		DisableInput();
-		ActivatePanel("fail");
+		ActivatePanel(MenuPanel.Fail);
 	}
 	
-	private void ActivatePanel(string panel)
-	{
-		if (mainMenuPanel != null) mainMenuPanel.hide();
-		if (pauseMenu != null) pauseMenu.hide();
-		if (selectLevelPanel != null) selectLevelPanel.hide();
-		if (tutorialPanel != null) tutorialPanel.hide();
-		if (scoreTablePanel != null) scoreTablePanel.hide();
-		if (settingsPanel != null) settingsPanel.hide();
-		if (completePanel != null) completePanel.hide();
-		if (failPanel != null) failPanel.hide();
-		//ui.gameObject.SetActive(true);
-		switch (panel)
-		{
-			case "mainMenu":    mainMenuPanel.show(); break;
-			case "pause":       pauseMenu.show();  break;
-			case "selectLevel": selectLevelPanel.show(); break;
-			case "tutorial":    tutorialPanel.show(); break;
-			case "scoreTable":  scoreTablePanel.show(); break;
-			case "settings":    settingsPanel.show(); break;
-			case "complete":    completePanel.show(); ui.gameObject.SetActive(false); break;
-			case "fail":        failPanel.show(); ui.gameObject.SetActive(false); break;
+	
+	private void ActivatePanel(MenuPanel panelId) {
+		foreach (AbstractPanelMenu panel in panels) {
+			if (panel.getId() == panelId) {
+				activePanel = panel;
+				panel.show();
+			}else{
+				panel.hide();
+			}
+		}
+	}
+	
+	private AbstractPanelMenu GetPanelByName(MenuPanel panel) {
+		foreach (AbstractPanelMenu currentPanel in panels) {
+			if (currentPanel.getId() == panel) {
+				return currentPanel;
+			}
 		}
 		
-		state = panel;
+		return null;
+	}
+	
+	public AbstractPanelMenu GetActivePanel() {
+		return activePanel;
+	}
+	
+	private void HidePanels() {
+		foreach (AbstractPanelMenu panel in panels) {
+			panel.hide();
+		}
+		
+		activePanel = null;
 	}
 	
 	protected void StopTime()
@@ -204,15 +199,11 @@ public class Game : MonoBehaviour
 	}
 	
 	protected void DisableInput() {
-		if (input != null) {
-			input.SetActive(false);
-		}
+		input.SetActive(false);
 	}
 	
 	protected void EnableInput() {
-		if (input != null) {
-			input.SetActive(true);
-		}
+		input.SetActive(true);
 	}
 	
 	protected void StartTime()
@@ -260,10 +251,6 @@ public class Game : MonoBehaviour
 		}
 	}
 	
-	public string getState() {
-		return state;
-	}
-	
 	public void EnableAudioListener(bool enabled) {
 		Camera cam = GameObject.FindObjectOfType(typeof(Camera)) as Camera;
 		cam.audio.enabled = enabled;
@@ -272,11 +259,15 @@ public class Game : MonoBehaviour
 	
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Escape)) {
-			switch(getState()) {
-				case "mainMenu": Quit(); break;
-				case "playing": MenuPause(); break;
-				case "pause":  MenuResume(); break;
-				default: MenuMainMenu(); break;					
+			if (GetActivePanel() != null) {
+				switch(GetActivePanel().getId()) {
+					case MenuPanel.MainMenu: Quit(); break;
+					case MenuPanel.Pause: MenuResume(); break;
+					default: MenuMainMenu(); break;					
+				}
+			}else{
+				// is palying
+				MenuPause();
 			}
 		}
 	}
@@ -299,6 +290,13 @@ public class Game : MonoBehaviour
 		SettingsContainer.SetSoundValue(value);
 		
 		mainThemeSong.audio.volume = mainThemeSongVolume;
-		
+	}
+	
+	public GameMode GetGameMode() {
+		return mode;
+	}
+	
+	public GameState GetGameState() {
+		return gameState;
 	}
 }

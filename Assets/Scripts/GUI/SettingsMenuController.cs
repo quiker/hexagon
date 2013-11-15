@@ -37,4 +37,8 @@ public class SettingsMenuController : AbstractPanelMenu {
 			mute.isChecked = SettingsContainer.GetMuteFlag();
 		}
 	}
+	
+	public override MenuPanel getId() {
+		return MenuPanel.Settings;
+	}
 }

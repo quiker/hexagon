@@ -58,5 +58,9 @@ public class LevelMenuController : AbstractPanelMenu {
 		uiLabel.text = isEnabledLevel ? levelIndex.ToString() : "Locked";
 	}
 	
+	public override MenuPanel getId() {
+		return MenuPanel.Level;
+	}
+	
 }
 

@@ -26,4 +26,8 @@ public class CompleteScreenController : AbstractPanelMenu {
 			stars.updateStars(countStars);
 		}
 	}
+	
+	public override MenuPanel getId() {
+		return MenuPanel.Complete;
+	}
 }

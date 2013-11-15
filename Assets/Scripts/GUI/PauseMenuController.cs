@@ -27,4 +27,8 @@ public class PauseMenuController : AbstractPanelMenu {
 			songCheckbox.isChecked = SettingsContainer.GetMuteFlag();
 		}
 	}
+	
+	public override MenuPanel getId() {
+		return MenuPanel.Pause;
+	}
 }
