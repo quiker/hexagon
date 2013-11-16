@@ -54,6 +54,7 @@ public class Game : MonoBehaviour
 	
 	public void MenuMainMenu()
 	{
+		ui.gameObject.SetActive(false);
 		StopTime();
 		gameState = GameState.Menu;
 		ActivatePanel(MenuPanel.MainMenu);
@@ -77,6 +78,7 @@ public class Game : MonoBehaviour
 	
 	public void MenuTutorial(int[] slides)
 	{
+		ui.gameObject.SetActive(false);
 		StopTime();
 		TutorialTooltipController tooltip = GetPanelByName(MenuPanel.TutorialTooltip) as TutorialTooltipController;
 		tooltip.SetAvailablesSlides(slides);
