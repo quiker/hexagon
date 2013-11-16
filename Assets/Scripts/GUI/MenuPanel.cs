@@ -9,5 +9,6 @@ public enum MenuPanel {
 				  		MainMenu, 
 				  		Pause, 
 				  		Settings,
-						Tutorial
+						Tutorial,
+						TutorialTooltip
 				 	  };

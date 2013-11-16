@@ -74,7 +74,11 @@ public class Game : MonoBehaviour
 	}
 	public void MenuTutorial(int[] slides)
 	{
-		return;
+		StopTime();
+		TutorialTooltipController tooltip = GetPanelByName(MenuPanel.TutorialTooltip) as TutorialTooltipController;
+		tooltip.SetAvailablesSlides(slides);
+		
+		ActivatePanel(tooltip);
 	}
 	public void MenuTutorial()
 	{
@@ -136,7 +140,7 @@ public class Game : MonoBehaviour
 	public void MenuRestart()
 	{
 		SendMessageToAllGameObjects("onLevelStarted", level);
-		MenuResume();
+		//MenuResume();
 	}
 	public void MenuNextLevel()
 	{
@@ -173,6 +177,10 @@ public class Game : MonoBehaviour
 				panel.hide();
 			}
 		}
+	}
+	
+	private void ActivatePanel(AbstractPanelMenu panel) {
+		ActivatePanel(panel.getId());
 	}
 	
 	private AbstractPanelMenu GetPanelByName(MenuPanel panel) {
@@ -267,6 +275,7 @@ public class Game : MonoBehaviour
 				switch(GetActivePanel().getId()) {
 					case MenuPanel.MainMenu: Quit(); break;
 					case MenuPanel.Pause: MenuResume(); break;
+					case MenuPanel.TutorialTooltip: MenuResume(); break;
 					default: MenuMainMenu(); break;					
 				}
 			}else{

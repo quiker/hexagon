@@ -113,6 +113,8 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		figureFactory.SetColors(colors);
 		if (tutorialSlides.Length > 0) {
 			Game.GetInstance().MenuTutorial(tutorialSlides);
+		}else{
+			Game.GetInstance().MenuResume();
 		}
 		currentFigure.Reinit();
 		currentFigure.NewFigure();
