@@ -41,22 +41,24 @@ public class Figure : MonoBehaviour
 		pins[pins.Length-1] = pin;
 	}
 	
-	public int[,] GetPinMap()
+	public int[,] GetPinsMap(bool pillsOnly = false)
 	{
-		int[,] pinMap = new int[41,41];
+		int[,] pinsMap = new int[41,41];
 		
 		// reset pinMap
 		for (int i = 0; i < 41; i++) {
 			for (int j = 0; j < 41; j++) {
-				pinMap[i,j] = 0;
+				pinsMap[i,j] = 0;
 			}
 		}
 		// update pinMap
 		foreach (Pin pin in pins) {
-			pinMap[(int)pin.position.x+20, (int)pin.position.y+20] = pin.color;
+			if (!pillsOnly || (pillsOnly && pin.type == Pin.PIN_TYPE_PILL)) {
+				pinsMap[(int)pin.position.x+20, (int)pin.position.y+20] = pin.color;
+			}
 		}
 		
-		return pinMap;
+		return pinsMap;
 	}
 	
 	public void MoveUp()

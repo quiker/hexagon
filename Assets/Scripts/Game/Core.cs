@@ -8,9 +8,17 @@ public class Core : MonoBehaviour
 	[HideInInspector]
 	public Figure figure;
 	private Vector2[][] rings;
-	private int[,] pinMap = new int[41,41];
+	private int[,] pinsMap = new int[41,41];
+	private int[,] actionsMap = new int[41,41];
 	private float delayEndTime = 0;
 	private bool isPinsRemoved = false;
+	
+	public int enableRings = 0;
+	public int enableLines = 0;
+	public int enableGroups = 0;
+	public int enableHexagons = 0;
+	public int lineLength = 0;
+	public int groupSize = 0;
 	
 	public LevelController levelController = null;
 	public AudioClip rotateAudioClip = null;
@@ -105,20 +113,20 @@ public class Core : MonoBehaviour
 	private void CheckAll()
 	{
 		isPinsRemoved = false;
-		// update pinMap
-		pinMap = figure.GetPinMap();
+		// update pinsMap
+		pinsMap = figure.GetPinsMap();
 		
 		bool needDalay = false;
-		if (!needDalay) {
+		if (!needDalay && enableRings != 0) {
 			needDalay = CheckRings();
 		}
-		if (!needDalay) {
+		if (!needDalay && enableLines != 0) {
 			needDalay = CheckLines();
 		}
-		if (!needDalay) {
+		if (!needDalay && enableGroups != 0) {
 			needDalay = CheckGroups();
 		}
-		if (!needDalay) {
+		if (!needDalay && enableHexagons != 0) {
 			needDalay = CheckHexagons();
 		}
 		
@@ -164,7 +172,7 @@ public class Core : MonoBehaviour
 			bool found = true;
 			if (ringNum >= rings.Length || ringNum == 0) continue;
 			foreach (Vector2 pos in rings[ringNum-1]) {
-				if (pinMap[(int)pos.x+20, (int)pos.y+20] == 0) {
+				if (pinsMap[(int)pos.x+20, (int)pos.y+20] == 0) {
 					found = false;
 					break;
 				}
@@ -259,52 +267,10 @@ public class Core : MonoBehaviour
 		return checkPins.Length > 0;
 	}
 	
-	private void FallPins(int[,] actionsMap, Vector2 pos)
-	{
-		Vector2 v;
-		Vector2 direction;
-		int vectorNum;
-		if (pos.y >= pos.x * 2 && pos.y > -pos.x) {
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP;
-		} else if (pos.y >= pos.x / 2 && pos.y < pos.x * 2) {
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP_RIGHT;
-		} else if (pos.y >= -pos.x && pos.y < pos.x / 2) {
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN_RIGHT;
-		} else if (pos.y <= pos.x * 2 && pos.y < -pos.x) {
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN;
-		} else if (pos.y <= pos.x / 2 && pos.y > pos.x * 2) {
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN_LEFT;
-		} else if (pos.y <= -pos.x && pos.y > pos.x / 2) {
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP_LEFT;
-		} else { // 0, 0
-			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP;
-		}
-		direction = HexVector2.GetBaseVector(vectorNum);
-		
-		int offset = 1;
-		while (Math.Abs(pos.x + direction.x * offset) <= 20 && Math.Abs(pos.y + direction.y * offset) <= 20) {
-			v = pos + direction * offset;
-			if (actionsMap[20 + (int)v.x, 20 + (int)v.y] == 0) {
-				actionsMap[20 + (int)v.x, 20 + (int)v.y] = (vectorNum + 3) % 6; // invert vector direction
-			} else if (actionsMap[20 + (int)v.x, 20 + (int)v.y] >= 0) {
-				actionsMap[20 + (int)v.x, 20 + (int)v.y] += 6;
-			}
-			offset++;
-		}
-	}
-	
 	public bool CheckLines()
-	{	
-		int lineLength = Game.GetInstance().levelController.lineLength;
-		
-		int[,] actionsMap = new int[41,41];
-		
+	{
 		// init actionsMap
-		for (int i = 0; i < 41; i++) {
-			for (int j = 0; j < 41; j++) {
-				actionsMap[i,j] = 0;
-			}
-		}
+		InitActionsMap();
 		
 		Vector2[] directions = {new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0)};
 		Vector2 v;
@@ -318,13 +284,13 @@ public class Core : MonoBehaviour
 				do {
 					offset++;
 					v = direction * offset + pin.position;
-				} while (pinMap[20+(int)v.x, 20+(int)v.y] == color);
+				} while (pinsMap[20+(int)v.x, 20+(int)v.y] == color);
 				int positive_offset = offset - 1;
 				offset = 0;
 				do {
 					offset++;
 					v = direction * -offset + pin.position;
-				} while (pinMap[20+(int)v.x, 20+(int)v.y] == color);
+				} while (pinsMap[20+(int)v.x, 20+(int)v.y] == color);
 				int negative_offset = offset - 1;
 				
 				if (positive_offset + negative_offset + 1 >= lineLength) {
@@ -372,13 +338,123 @@ public class Core : MonoBehaviour
 	}
 	
 	public bool CheckGroups()
-	{
-		return false;
+	{	
+		// init actionsMap
+		InitActionsMap();
+		pinsMap = figure.GetPinsMap(true);
+		
+		Vector2 direction;
+		Vector2 v;
+		
+		foreach (Pin pin in figure.pins) {
+			if (pin.type != Pin.PIN_TYPE_PILL) {
+				Debug.Log ("Tet");
+				// each pin check on 6 directions
+				int pillCount = 0;
+				for (int i = 0; i < 6; i++) {
+					direction = HexVector2.baseVectors[i];
+					v = direction + pin.position;
+					if (pinsMap[20+(int)v.x, 20+(int)v.y] == pin.color) {
+						pillCount++;
+					}
+				}
+				if (pillCount >= groupSize) {
+					for (int i = 0; i < 6; i++) {
+						direction = HexVector2.baseVectors[i];
+						v = direction + pin.position;
+						if (pinsMap[20+(int)v.x, 20+(int)v.y] == pin.color && actionsMap[20+(int)v.x, 20+(int)v.y] != -1) {
+							actionsMap[20+(int)v.x, 20+(int)v.y] = -1;
+							FallPins(actionsMap, v);
+						}
+					}
+					// center pin
+					v = pin.position;
+					if (actionsMap[20+(int)v.x, 20+(int)v.y] != -1) {
+						actionsMap[20+(int)v.x, 20+(int)v.y] = -1;
+						FallPins(actionsMap, v);
+					}
+				}
+				
+			}
+		}
+		
+		// remove pins
+		LinkedList<Pin> newPins = new LinkedList<Pin>();
+		LinkedList<Pin> newCheckPins = new LinkedList<Pin>();
+		foreach (Pin pin in figure.pins) {
+			newPins.AddLast(pin);
+		}
+		foreach (Pin pin in figure.pins) {
+			if (actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] == -1) {
+				pin.DestroyPin();
+				newPins.Remove(pin);
+				isPinsRemoved = true;
+			} else if (actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] > 0) {
+				int direction2 = actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] % 6;
+				int offset = Mathf.FloorToInt(actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] / 6) + 1;
+				v = HexVector2.GetBaseVector(direction2) * offset;
+				pin.MoveOn(v);
+				newCheckPins.AddLast(pin);
+			}
+		}
+		figure.pins = new Pin[newPins.Count];
+		newPins.CopyTo(figure.pins, 0);
+
+		if (newCheckPins.Count == 0) {
+			return false;
+		}
+		checkPins = new Pin[newCheckPins.Count];
+		newCheckPins.CopyTo(checkPins, 0);
+		
+		return checkPins.Length > 0;
 	}
 	
 	public bool CheckHexagons()
 	{
 		return false;	
+	}
+	
+	private void InitActionsMap()
+	{
+		for (int i = 0; i < 41; i++) {
+			for (int j = 0; j < 41; j++) {
+				actionsMap[i,j] = 0;
+			}
+		}
+	}
+	
+	private void FallPins(int[,] actionsMap, Vector2 pos)
+	{
+		Vector2 v;
+		Vector2 direction;
+		int vectorNum;
+		if (pos.y >= pos.x * 2 && pos.y > -pos.x) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP;
+		} else if (pos.y >= pos.x / 2 && pos.y < pos.x * 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP_RIGHT;
+		} else if (pos.y >= -pos.x && pos.y < pos.x / 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN_RIGHT;
+		} else if (pos.y <= pos.x * 2 && pos.y < -pos.x) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN;
+		} else if (pos.y <= pos.x / 2 && pos.y > pos.x * 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN_LEFT;
+		} else if (pos.y <= -pos.x && pos.y > pos.x / 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP_LEFT;
+		} else { // 0, 0
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP;
+		}
+		direction = HexVector2.GetBaseVector(vectorNum);
+		
+		int offset = 1;
+		while (Math.Abs(pos.x + direction.x * offset) <= 20 && Math.Abs(pos.y + direction.y * offset) <= 20) {
+			v = pos + direction * offset;
+			if (actionsMap[20 + (int)v.x, 20 + (int)v.y] == 0) {
+				actionsMap[20 + (int)v.x, 20 + (int)v.y] = (vectorNum + 3) % 6; // invert vector direction
+			} else if (actionsMap[20 + (int)v.x, 20 + (int)v.y] >= 0) {
+				actionsMap[20 + (int)v.x, 20 + (int)v.y] += 6;
+			}
+			offset++;
+		}
 	}
 	
 	private int RingNum(Vector2 pos)
