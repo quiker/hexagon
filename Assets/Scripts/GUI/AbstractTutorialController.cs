@@ -28,7 +28,7 @@ abstract public class AbstractTutorialController : AbstractPanelMenu
 	{
 		availablesSlides = slides;
 		
-		ShowSlideByIndex(currentSlideIndex);
+		ShowSlideByIndex(0);
 	}
 	
 	protected void ShowSlideByIndex(int index)
