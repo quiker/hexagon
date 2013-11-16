@@ -41,7 +41,8 @@ public class Game : MonoBehaviour
 	private GameState gameState;
 	private AbstractPanelMenu activePanel;
 	
-	void Start() {
+	void Start()
+	{
 		EnableAudioListener(!SettingsContainer.GetMuteFlag());
 		MenuMainMenu();
 	}
@@ -66,12 +67,14 @@ public class Game : MonoBehaviour
 		ActivatePanel(MenuPanel.Level);
 		SendMessageToAllGameObjects("onSelectLevelShow");
 	}
+	
 	public void MenuSurvivalMode()
 	{
 		mode = GameMode.Survival;
 		MenuPause();
 		//---------------------
 	}
+	
 	public void MenuTutorial(int[] slides)
 	{
 		StopTime();
@@ -80,6 +83,7 @@ public class Game : MonoBehaviour
 		
 		ActivatePanel(tooltip);
 	}
+	
 	public void MenuTutorial()
 	{
 		StopTime();
@@ -87,29 +91,34 @@ public class Game : MonoBehaviour
 		
 		SendMessageToAllGameObjects("onTutorialShow");
 	}
+	
 	public void MenuSettings()
 	{
 		StopTime();
 		ActivatePanel(MenuPanel.Settings);
 		SendMessageToAllGameObjects("onSettingsShow");
 	}
+	
 	public void Quit()
 	{
 		Debug.Log("Quit");
 		Application.Quit();
 	}
+	
 	public void MenuStartLevel(int level)
 	{
 		StartTime();
 		this.level = level;
 		MenuRestart();
 	}
+	
 	public void MenuAchievements()
 	{
 		StopTime();
 		ActivatePanel(MenuPanel.Achievements);
 		SendMessageToAllGameObjects("onAchievementsTable");
 	}
+	
 	public void MenuPause()
 	{
 		StopTime();
@@ -122,6 +131,7 @@ public class Game : MonoBehaviour
 		
 		SendMessageToAllGameObjects("onLevelPaused", true);
 	}
+	
 	public void MenuResume()
 	{
 		Time.timeScale = 1;
@@ -137,16 +147,19 @@ public class Game : MonoBehaviour
 		
 		SendMessageToAllGameObjects("onLevelPaused", false);
 	}
+	
 	public void MenuRestart()
 	{
 		SendMessageToAllGameObjects("onLevelStarted", level);
 		//MenuResume();
 	}
+	
 	public void MenuNextLevel()
 	{
 		level++;
 		MenuRestart();
 	}
+	
 	public void CompleteScreen(int score, int stars)
 	{
 		StopTime();
@@ -160,6 +173,7 @@ public class Game : MonoBehaviour
 		// save score to score table
 		ActivatePanel(MenuPanel.Complete);
 	}
+	
 	public void FailScreen()
 	{
 		StopTime();
@@ -167,8 +181,8 @@ public class Game : MonoBehaviour
 		ActivatePanel(MenuPanel.Fail);
 	}
 	
-	
-	private void ActivatePanel(MenuPanel panelId) {
+	private void ActivatePanel(MenuPanel panelId)
+	{
 		foreach (AbstractPanelMenu panel in panels) {
 			if (panel.getId() == panelId) {
 				activePanel = panel;
@@ -179,11 +193,13 @@ public class Game : MonoBehaviour
 		}
 	}
 	
-	private void ActivatePanel(AbstractPanelMenu panel) {
+	private void ActivatePanel(AbstractPanelMenu panel)
+	{
 		ActivatePanel(panel.getId());
 	}
 	
-	private AbstractPanelMenu GetPanelByName(MenuPanel panel) {
+	private AbstractPanelMenu GetPanelByName(MenuPanel panel)
+	{
 		foreach (AbstractPanelMenu currentPanel in panels) {
 			if (currentPanel.getId() == panel) {
 				return currentPanel;
@@ -193,11 +209,13 @@ public class Game : MonoBehaviour
 		return null;
 	}
 	
-	public AbstractPanelMenu GetActivePanel() {
+	public AbstractPanelMenu GetActivePanel()
+	{
 		return activePanel;
 	}
 	
-	private void HidePanels() {
+	private void HidePanels()
+	{
 		foreach (AbstractPanelMenu panel in panels) {
 			panel.hide();
 		}
@@ -210,11 +228,13 @@ public class Game : MonoBehaviour
 		Time.timeScale = 0;
 	}
 	
-	protected void DisableInput() {
+	protected void DisableInput()
+	{
 		input.SetActive(false);
 	}
 	
-	protected void EnableInput() {
+	protected void EnableInput()
+	{
 		input.SetActive(true);
 	}
 	
@@ -236,14 +256,16 @@ public class Game : MonoBehaviour
 	/*
 	 * Когда сворачиваешь или переходишь на другое окно
 	 * */
-	void OnApplicationPause(bool pauseStatus) {		
-        if (pauseStatus == true && !IsPaused()) {
+	void OnApplicationPause(bool pauseStatus)
+	{
+		if (pauseStatus == true && !IsPaused()) {
 			MenuPause();
 		}
 		mainThemeSong.enabled = !pauseStatus;
-    }
+	}
 	
-	public void SetMute(bool isMute) {
+	public void SetMute(bool isMute)
+	{
 		if (SettingsContainer.GetMuteFlag() != isMute) {
 			SettingsContainer.SetMuteFlag(isMute);
 			
@@ -257,19 +279,22 @@ public class Game : MonoBehaviour
 		}
 	}
 	
-	private void SendMessageToAllGameObjects(string methodName, object value = null) {
+	private void SendMessageToAllGameObjects(string methodName, object value = null)
+	{
 		foreach (GameObject gameObject in GameObject.FindObjectsOfType(typeof(GameObject))) {
-	    	gameObject.SendMessage(methodName, value, SendMessageOptions.DontRequireReceiver);
+			gameObject.SendMessage(methodName, value, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 	
-	public void EnableAudioListener(bool enabled) {
+	public void EnableAudioListener(bool enabled)
+	{
 		Camera cam = GameObject.FindObjectOfType(typeof(Camera)) as Camera;
 		cam.audio.enabled = enabled;
 		AudioListener.volume = enabled ? 1 : 0;
 	}
 	
-	void Update() {
+	void Update()
+	{
 		if (Input.GetKeyDown(KeyCode.Escape)) {
 			if (GetActivePanel() != null) {
 				switch(GetActivePanel().getId()) {
@@ -285,7 +310,8 @@ public class Game : MonoBehaviour
 		}
 	}
 	
-	public void SetMusicValue(float value) {
+	public void SetMusicValue(float value)
+	{
 		if (mainThemeSong != null) {
 			mainThemeSong.audio.volume = value;
 		}
@@ -293,7 +319,8 @@ public class Game : MonoBehaviour
 		SettingsContainer.SetMusicValue(value);
 	}
 	
-	public void SetSoundValue(float value) {
+	public void SetSoundValue(float value)
+	{
 		float mainThemeSongVolume = mainThemeSong.audio.volume; 
 			
 		foreach (AudioSource aud in GameObject.FindObjectsOfType(typeof(AudioSource))) {
@@ -305,11 +332,13 @@ public class Game : MonoBehaviour
 		mainThemeSong.audio.volume = mainThemeSongVolume;
 	}
 	
-	public GameMode GetGameMode() {
+	public GameMode GetGameMode()
+	{
 		return mode;
 	}
 	
-	public GameState GetGameState() {
+	public GameState GetGameState()
+	{
 		return gameState;
 	}
 }

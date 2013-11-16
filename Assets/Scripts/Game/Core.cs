@@ -30,7 +30,8 @@ public class Core : MonoBehaviour
 	private Pin[] checkPins;
 		
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		// init ring coordinates
 		rings = new Vector2[15][]; 
 		

@@ -15,13 +15,15 @@ internal class Ortho2dCamera : MonoBehaviour
 		if (uniform) {
 			SetUniform();
 		}
-  	} 
+  	}
+	
 	private void LateUpdate()
 	{
 		if (autoSetUniform && uniform) {
 			SetUniform();
 		}
-	} 
+	}
+	
 	private void SetUniform()
 	{
 		float orthographicSize;
