@@ -1,8 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HexVector2 {
-
+public class HexVector2
+{
+	public const int HEX_VECTOR_DIRECTION_UP         = 0;
+	public const int HEX_VECTOR_DIRECTION_UP_RIGHT   = 1;
+	public const int HEX_VECTOR_DIRECTION_DOWN_RIGHT = 2;
+	public const int HEX_VECTOR_DIRECTION_DOWN       = 3;
+	public const int HEX_VECTOR_DIRECTION_DOWN_LEFT  = 4;
+	public const int HEX_VECTOR_DIRECTION_UP_LEFT    = 5;
+	
+	public static Vector2[] baseVectors = new Vector2[6] {
+		new Vector2(0, 1),
+		new Vector2(1, 1),
+		new Vector2(1, 0),
+		new Vector2(0, -1),
+		new Vector2(-1, -1),
+		new Vector2(-1, 0),
+	};
+	
+	public static Vector2 GetBaseVector(int direction)
+	{
+		return HexVector2.baseVectors[direction];
+	}
+	
 	public static Vector2 RotateCW(Vector2 pos)
 	{
 		Vector2 newPos;

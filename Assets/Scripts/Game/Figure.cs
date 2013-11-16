@@ -53,7 +53,7 @@ public class Figure : MonoBehaviour
 		}
 		// update pinMap
 		foreach (Pin pin in pins) {
-			pinMap[(int)pin.position.x+21, (int)pin.position.y+21] = pin.color;
+			pinMap[(int)pin.position.x+20, (int)pin.position.y+20] = pin.color;
 		}
 		
 		return pinMap;

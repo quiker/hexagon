@@ -164,7 +164,7 @@ public class Core : MonoBehaviour
 			bool found = true;
 			if (ringNum >= rings.Length || ringNum == 0) continue;
 			foreach (Vector2 pos in rings[ringNum-1]) {
-				if (pinMap[(int)pos.x+21, (int)pos.y+21] == 0) {
+				if (pinMap[(int)pos.x+20, (int)pos.y+20] == 0) {
 					found = false;
 					break;
 				}
@@ -259,6 +259,40 @@ public class Core : MonoBehaviour
 		return checkPins.Length > 0;
 	}
 	
+	private void FallPins(int[,] actionsMap, Vector2 pos)
+	{
+		Vector2 v;
+		Vector2 direction;
+		int vectorNum;
+		if (pos.y >= pos.x * 2 && pos.y > -pos.x) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP;
+		} else if (pos.y >= pos.x / 2 && pos.y < pos.x * 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP_RIGHT;
+		} else if (pos.y >= -pos.x && pos.y < pos.x / 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN_RIGHT;
+		} else if (pos.y <= pos.x * 2 && pos.y < -pos.x) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN;
+		} else if (pos.y <= pos.x / 2 && pos.y > pos.x * 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_DOWN_LEFT;
+		} else if (pos.y <= -pos.x && pos.y > pos.x / 2) {
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP_LEFT;
+		} else { // 0, 0
+			vectorNum = HexVector2.HEX_VECTOR_DIRECTION_UP;
+		}
+		direction = HexVector2.GetBaseVector(vectorNum);
+		
+		int offset = 1;
+		while (Math.Abs(pos.x + direction.x * offset) <= 20 && Math.Abs(pos.y + direction.y * offset) <= 20) {
+			v = pos + direction * offset;
+			if (actionsMap[20 + (int)v.x, 20 + (int)v.y] == 0) {
+				actionsMap[20 + (int)v.x, 20 + (int)v.y] = (vectorNum + 3) % 6; // invert vector direction
+			} else if (actionsMap[20 + (int)v.x, 20 + (int)v.y] >= 0) {
+				actionsMap[20 + (int)v.x, 20 + (int)v.y] += 6;
+			}
+			offset++;
+		}
+	}
+	
 	public bool CheckLines()
 	{	
 		int lineLength = Game.GetInstance().levelController.lineLength;
@@ -277,9 +311,6 @@ public class Core : MonoBehaviour
 		int offset;
 		
 		foreach (Pin pin in checkPins) {
-//			if (actionsMap[21+(int)pin.position.x, 21+(int)pin.position.y] == -1) {
-//				continue;
-//			}
 			// each pin check on 3 directions
 			foreach (Vector2 direction in directions) {
 				int color = pin.color;
@@ -287,20 +318,23 @@ public class Core : MonoBehaviour
 				do {
 					offset++;
 					v = direction * offset + pin.position;
-				} while (pinMap[21+(int)v.x, 21+(int)v.y] == color);
+				} while (pinMap[20+(int)v.x, 20+(int)v.y] == color);
 				int positive_offset = offset - 1;
 				offset = 0;
 				do {
 					offset++;
 					v = direction * -offset + pin.position;
-				} while (pinMap[21+(int)v.x, 21+(int)v.y] == color);
+				} while (pinMap[20+(int)v.x, 20+(int)v.y] == color);
 				int negative_offset = offset - 1;
 				
 				if (positive_offset + negative_offset + 1 >= lineLength) {
 					// line found
 					for (int i = -negative_offset; i <= positive_offset; i++) {
 						v = direction * i + pin.position;
-						actionsMap[21+(int)v.x, 21+(int)v.y] = -1;
+						if (actionsMap[20+(int)v.x, 20+(int)v.y] != -1) {
+							actionsMap[20+(int)v.x, 20+(int)v.y] = -1;
+							FallPins(actionsMap, v);
+						}
 					}
 				}
 			}
@@ -308,20 +342,26 @@ public class Core : MonoBehaviour
 		
 		// remove pins
 		LinkedList<Pin> newPins = new LinkedList<Pin>();
+		LinkedList<Pin> newCheckPins = new LinkedList<Pin>();
 		foreach (Pin pin in figure.pins) {
 			newPins.AddLast(pin);
 		}
 		foreach (Pin pin in figure.pins) {
-			if (actionsMap[21+(int)pin.position.x, 21+(int)pin.position.y] == -1) {
+			if (actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] == -1) {
 				pin.DestroyPin();
 				newPins.Remove(pin);
 				isPinsRemoved = true;
+			} else if (actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] > 0) {
+				int direction = actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] % 6;
+				offset = Mathf.FloorToInt(actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] / 6) + 1;
+				v = HexVector2.GetBaseVector(direction) * offset;
+				pin.MoveOn(v);
+				newCheckPins.AddLast(pin);
 			}
 		}
 		figure.pins = new Pin[newPins.Count];
 		newPins.CopyTo(figure.pins, 0);
-		
-		LinkedList<Pin> newCheckPins = new LinkedList<Pin>(); /////////////////////
+
 		if (newCheckPins.Count == 0) {
 			return false;
 		}
