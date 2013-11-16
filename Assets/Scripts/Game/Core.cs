@@ -277,9 +277,9 @@ public class Core : MonoBehaviour
 		int offset;
 		
 		foreach (Pin pin in checkPins) {
-			if (actionsMap[21+(int)pin.position.x, 21+(int)pin.position.y] == -1) {
-				continue;
-			}
+//			if (actionsMap[21+(int)pin.position.x, 21+(int)pin.position.y] == -1) {
+//				continue;
+//			}
 			// each pin check on 3 directions
 			foreach (Vector2 direction in directions) {
 				int color = pin.color;

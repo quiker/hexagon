@@ -22,7 +22,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	private int groupSize = 0;
 	private int enableHexagons = 0;
 	private int[] colors;
-	private int[][] actions;
+	private float[][] actions;
 	private int score = 0;
 	
 	public UIController ui = null;
@@ -84,6 +84,11 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 			colors[i] = N["colors"][i].AsInt;
 		}
 		
+		int[] tutorialSlides = new int[N["tutorialSlides"].Count];
+		for(int i = 0; i < N["tutorialSlides"].Count; i++) {
+			tutorialSlides[i] = N["tutorialSlides"][i].AsInt;
+		}
+		
 		int[][] pins = new int[N["pins"].Count][];
 		for(int i = 0; i < N["pins"].Count; i++) {
 			pins[i] = new int[N["pins"][i].Count];
@@ -92,11 +97,11 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 			}
 		}
 		
-		actions = new int[N["actions"].Count][];
+		actions = new float[N["actions"].Count][];
 		for(int i = 0; i < N["actions"].Count; i++) {
-			actions[i] = new int[N["actions"][i].Count];
+			actions[i] = new float[N["actions"][i].Count];
 			for(int j = 0; j < N["actions"][i].Count; j++) {
-				actions[i][j] = N["actions"][i][j].AsInt;
+				actions[i][j] = N["actions"][i][j].AsFloat;
 			}
 		}
 		pinFactory.SetActions(actions);
@@ -106,6 +111,9 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		core.SetPins(pinArr);
 		
 		figureFactory.SetColors(colors);
+		if (tutorialSlides.Length > 0) {
+			Game.GetInstance().MenuTutorial(tutorialSlides);
+		}
 		currentFigure.Reinit();
 		currentFigure.NewFigure();
 	}

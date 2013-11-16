@@ -9,6 +9,14 @@ public class Pin : MonoBehaviour
 	public const int PIN_TYPE_MOB2 = 3;
 	public const int PIN_TYPE_MOB3 = 4;
 	
+	public class MobAction {
+		public int id;
+		public float inactiveInterval;
+		public float activeInterval;
+		public float chance;
+		public float[] parameters;
+	}
+	
 	// inspector fields
 	public GameObject pillSprite =  null;
 	public GameObject splashSprite =  null;
@@ -52,21 +60,17 @@ public class Pin : MonoBehaviour
 		}
 	}
 	
-	private int[] _action;
-	public int[] action {
+	private MobAction[] _actions;
+	public MobAction[] actions {
 		get {
-			return this._action;
+			return this._actions;
 		}
 		set {
-			_action = value;
-			InitNewAction();
+			_actions = value;
+			InitActions();
 		}
 	}
 	
-	// destroy delay
-	private float destroyTime = 0;
-	// action delay
-	private float actionTime = 0;
 	// interpolation movement
 	private bool inMoving = false;
 	private float startTime;
@@ -75,14 +79,6 @@ public class Pin : MonoBehaviour
 	
 	void Update ()
 	{
-		// destroing
-		if (destroyTime != 0 && Time.timeSinceLevelLoad >= destroyTime) {
-			Destroy(gameObject);
-		}
-		// action
-		if (actionTime != 0 && Time.timeSinceLevelLoad >= actionTime) {
-			OnAction();
-		}
 		// moving
 		if (inMoving) {
 			float tLerp = Time.timeSinceLevelLoad - startTime;
@@ -122,7 +118,12 @@ public class Pin : MonoBehaviour
 		}
 		pillSprite.SetActive(false);
 		splashSprite.SetActive(true);
-		destroyTime = Time.timeSinceLevelLoad + 0.5f;
+		Invoke("RealDestroyPin", 0.5f);
+	}
+	
+	public void RealDestroyPin()
+	{
+		Destroy(gameObject);
 	}
 	
 	public void MoveOn(Vector2 vector)
@@ -139,52 +140,72 @@ public class Pin : MonoBehaviour
 		transform.localPosition = HexVector2.ConvertHexVector(_position);
 	}
 	
-	private void InitNewAction()
+	private void InitActions()
 	{
-		if (action.Length > 0) {
-			actionTime = Time.timeSinceLevelLoad + action[0] + Random.Range(0f, 1f) * action[1];
-		}
-	}
-	
-	private void OnAction()
-	{
-		if (Random.Range(0, 100) < action[2]) {
-			switch (_type) {
-				case PIN_TYPE_MOB1: Mob1Action(); break;
-				case PIN_TYPE_MOB2: Mob2Action(); break;
-				case PIN_TYPE_MOB3: Mob3Action(); break;	
+		int i = 0;
+		foreach (MobAction action in _actions) {
+			if (action != null) {
+				StartCoroutine(ActionRoutine(i));
 			}
+			i++;
 		}
-		InitNewAction();
 	}
 	
-	public void Mob1Action()
+	public IEnumerator ActionRoutine(int actionNum)
+	{
+		MobAction action = _actions[actionNum];
+		yield return new WaitForSeconds(action.inactiveInterval + Random.Range(0f, 1f) * action.activeInterval);
+		if (Random.Range(0, 100) < action.chance) {
+	    	OnAction(actionNum);
+		}
+	}
+	
+	private void OnAction(int actionNum)
+	{
+		MobAction action = _actions[actionNum];
+		switch (action.id) {
+			case 1: MobAction1(actionNum); break;
+			case 2: MobAction2(actionNum); break;
+			case 3: MobAction3(actionNum); break;
+			case 4: MobAction4(actionNum); break;
+			case 5: MobAction5(actionNum); break;
+		}
+		StartCoroutine(ActionRoutine(actionNum));
+	}
+	
+	public void MobAction1(int actionNum)
 	{
 		return;
 	}
 	
-	public void Mob2Action()
+	public void MobAction2(int actionNum)
 	{
 		Debug.Log("mob 2 action");
-		int colorsCount = action.Length - 3;
+		
+		MobAction action = _actions[actionNum];
+		int colorsCount = action.parameters.Length;
 		if (colorsCount == 0) {
 			return;
 		} else if (colorsCount == 1) {
-			color = action[3];
+			color = (int)action.parameters[0];
 		} else if (colorsCount == 2) {
-			color = (color == action[3]) ? action[4] : action[3];
+			color = (color == (int)action.parameters[0]) ? (int)action.parameters[1] : (int)action.parameters[0];
 		} else {
 			int tmp_color;
 			do {
 				int colorId = Random.Range(0, colorsCount);
-				tmp_color = action[3 + colorId];
+				tmp_color = (int)action.parameters[colorId];
 			} while (color == tmp_color);
 			color = tmp_color;
 		}
 	}
 	
-	public void Mob3Action()
+	public void MobAction3(int actionNum)
 	{
+		Debug.Log("mob 3 action");
+		
+		MobAction action = _actions[actionNum];
+		
 		Vector2[] checkVectors = {
 			new Vector2(0, 1),
 			new Vector2(1, 1),
@@ -193,10 +214,10 @@ public class Pin : MonoBehaviour
 			new Vector2(-1, -1),
 			new Vector2(-1, 0)
 		};
+		ArrayUtils.RandomSort<Vector2>(checkVectors);
 		
-		Debug.Log("mob 3 action");
 		Figure f = Game.GetInstance().GetLevelController().core.figure;
-		for (int i = 0; i < action[3]; i++) {
+		for (int i = 0; i < action.parameters[0]; i++) {
 			Vector2 dstVector = new Vector2();
 			bool vectorFound = false;
 			foreach (Vector2 v in checkVectors) {
@@ -207,10 +228,28 @@ public class Pin : MonoBehaviour
 				}
 			}
 			if (vectorFound) {
-				Pin pin = Game.GetInstance().GetLevelController().pinFactory.GetPin(f, action[4], action[5], _position, action[6]);
+				int[] actionIds = ArrayUtils.Slice(action.parameters, 3);
+				Pin pin = Game.GetInstance().GetLevelController().pinFactory.GetPin(f, (int)action.parameters[1], (int)action.parameters[2], _position, actionIds);
 				f.AddPin(pin);
 				pin.MoveOn(dstVector);
 			}
 		}
 	}
+	
+	public void MobAction4(int actionNum)
+	{
+		Debug.Log("mob 4 action");
+		
+		MobAction action = _actions[actionNum];
+		return;
+	}
+	
+	public void MobAction5(int actionNum)
+	{
+		Debug.Log("mob 5 action");
+		
+		MobAction action = _actions[actionNum];
+		return;
+	}
 }
+

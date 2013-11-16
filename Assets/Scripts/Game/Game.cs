@@ -72,6 +72,10 @@ public class Game : MonoBehaviour
 		MenuPause();
 		//---------------------
 	}
+	public void MenuTutorial(int[] slides)
+	{
+		return;
+	}
 	public void MenuTutorial()
 	{
 		StopTime();
