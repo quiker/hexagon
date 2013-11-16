@@ -101,7 +101,7 @@ public class Game : MonoBehaviour
 	
 	public void Quit()
 	{
-		Debug.Log("Quit");
+		PlayerPrefs.DeleteAll();
 		Application.Quit();
 	}
 	

@@ -13,7 +13,6 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	
 	private int id = 0;
 	private string name = "test";
-	private int star1 = 0;
 	private int star2 = 0;
 	private int star3 = 0;
 	private int figureLimit = 0;
@@ -110,9 +109,9 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		core.SetPins(pinArr);
 		
 		figureFactory.SetColors(colors);
-		if (tutorialSlides.Length > 0) {
+		if (tutorialSlides.Length > 0 && SettingsContainer.SetAvailableSlides(tutorialSlides)) {
 			Game.GetInstance().MenuTutorial(tutorialSlides);
-		}else{
+		} else {
 			Game.GetInstance().MenuResume();
 		}
 		currentFigure.Reinit();
@@ -123,8 +122,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	{
 		// calculate stars
 		score = Math.Max(figureLimit * 10, 0);
-		int stars = 0;
-		if (score >= star1) stars = 1;
+		int stars = 1;
 		if (score >= star2) stars = 2;
 		if (score >= star3) stars = 3;
 		Game.GetInstance().CompleteScreen(score, stars);

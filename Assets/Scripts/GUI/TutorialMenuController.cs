@@ -20,9 +20,8 @@ public class TutorialMenuController : AbstractTutorialController {
 		return MenuPanel.Tutorial;
 	}
 	
-	// Test
-	void Start() {
+	void OnEnable() {
 		// get available slides
-		SetAvailablesSlides(new int[] {1, 2, 3});
+		SetAvailablesSlides(SettingsContainer.GetAvailableSlides());
 	}
 }
