@@ -348,7 +348,6 @@ public class Core : MonoBehaviour
 		
 		foreach (Pin pin in figure.pins) {
 			if (pin.type != Pin.PIN_TYPE_PILL) {
-				Debug.Log ("Tet");
 				// each pin check on 6 directions
 				int pillCount = 0;
 				for (int i = 0; i < 6; i++) {
@@ -411,7 +410,70 @@ public class Core : MonoBehaviour
 	
 	public bool CheckHexagons()
 	{
-		return false;	
+		// init actionsMap
+		InitActionsMap();
+		//pinsMap = figure.GetPinsMap(true);
+		
+		Vector2 direction;
+		Vector2 v;
+		
+		foreach (Pin pin in figure.pins) {
+			// each pin check on 6 directions
+			int pinCount = 0;
+			for (int i = 0; i < 6; i++) {
+				direction = HexVector2.baseVectors[i];
+				v = direction + pin.position;
+				if (pinsMap[20+(int)v.x, 20+(int)v.y] == pin.color) {
+					pinCount++;
+				}
+			}
+			if (pinCount == 6) {
+				for (int i = 0; i < 6; i++) {
+					direction = HexVector2.baseVectors[i];
+					v = direction + pin.position;
+					if (actionsMap[20+(int)v.x, 20+(int)v.y] != -1) {
+						actionsMap[20+(int)v.x, 20+(int)v.y] = -1;
+						FallPins(actionsMap, v);
+					}
+				}
+				// center pin
+				v = pin.position;
+				if (actionsMap[20+(int)v.x, 20+(int)v.y] != -1) {
+					actionsMap[20+(int)v.x, 20+(int)v.y] = -1;
+					FallPins(actionsMap, v);
+				}
+			}
+		}
+		
+		// remove pins
+		LinkedList<Pin> newPins = new LinkedList<Pin>();
+		LinkedList<Pin> newCheckPins = new LinkedList<Pin>();
+		foreach (Pin pin in figure.pins) {
+			newPins.AddLast(pin);
+		}
+		foreach (Pin pin in figure.pins) {
+			if (actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] == -1) {
+				pin.DestroyPin();
+				newPins.Remove(pin);
+				isPinsRemoved = true;
+			} else if (actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] > 0) {
+				int direction2 = actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] % 6;
+				int offset = Mathf.FloorToInt(actionsMap[20+(int)pin.position.x, 20+(int)pin.position.y] / 6) + 1;
+				v = HexVector2.GetBaseVector(direction2) * offset;
+				pin.MoveOn(v);
+				newCheckPins.AddLast(pin);
+			}
+		}
+		figure.pins = new Pin[newPins.Count];
+		newPins.CopyTo(figure.pins, 0);
+
+		if (newCheckPins.Count == 0) {
+			return false;
+		}
+		checkPins = new Pin[newCheckPins.Count];
+		newCheckPins.CopyTo(checkPins, 0);
+		
+		return checkPins.Length > 0;	
 	}
 	
 	private void InitActionsMap()
