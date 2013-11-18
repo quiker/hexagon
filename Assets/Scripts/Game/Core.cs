@@ -91,8 +91,8 @@ public class Core : MonoBehaviour
 		figure.UpdatePosition();
 		
 		if (CheckFail()) {
-			Game.GetInstance().FailScreen();
 			levelController.OnConnectFinish();
+			levelController.LevelFail();
 		} else {
 			CheckAll();
 			if (!isPinsRemoved) {

@@ -106,14 +106,11 @@ public class SettingsContainer
 	{
 		int max = 0;
 		bool updated = false;
-		Debug.Log ("Set");
 		for (int i = 0; i < slides.Length; i++) {
-			Debug.Log (slides[i]);
 			if (slides[i] > max) {
 				max = slides[i];
 			}
 		}
-		Debug.Log ("max: " + max);
 		if (PlayerPrefs.GetInt("available_slides", -1) < max) {
 			updated = true;
 			PlayerPrefs.SetInt("available_slides", max);
@@ -125,10 +122,8 @@ public class SettingsContainer
 	public static int[] GetAvailableSlides() {
 		int count = PlayerPrefs.GetInt("available_slides", 0);
 		int[] result = new int[count+1];
-		Debug.Log ("get");
 		for (int i = 0; i <= count; i++) {
 			result[i] = i;
-			Debug.Log (i);
 		}
 		
 		return result;

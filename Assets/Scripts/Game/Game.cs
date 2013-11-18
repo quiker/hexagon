@@ -25,7 +25,7 @@ public class Game : MonoBehaviour
 			_instance = new Game();
 		}
 		return _instance;
-	}	
+	}
 	public AbstractPanelMenu[] panels;
 		
 	public UIController ui;
@@ -116,6 +116,11 @@ public class Game : MonoBehaviour
 	
 	public void MenuAchievements()
 	{
+		Debug.Log (AchievementManager.GetInstance().achievements[0].name);
+		Debug.Log (AchievementManager.GetInstance().achievements[0].IsCompleted());
+		Debug.Log (AchievementManager.GetInstance().achievements[1].IsCompleted());
+		Debug.Log (AchievementManager.GetInstance().achievements[0].GetProgressText());
+		Debug.Log (AchievementManager.GetInstance().achievements[1].GetProgressText());
 		StopTime();
 		ActivatePanel(MenuPanel.Achievements);
 		SendMessageToAllGameObjects("onAchievementsTable");

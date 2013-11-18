@@ -117,6 +117,12 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		currentFigure.Reinit();
 		currentFigure.NewFigure();
 	}
+	
+	public void LevelFail()
+	{
+		AchievementManager.GetInstance().EventFail();
+		Game.GetInstance().FailScreen();
+	}
 
 	protected void LevelComplete()
 	{
@@ -125,10 +131,13 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		int stars = 1;
 		if (score >= star2) stars = 2;
 		if (score >= star3) stars = 3;
-		Game.GetInstance().CompleteScreen(score, stars);
 		
 		SettingsContainer.SetLevelMaxScore(id, score);
 		SettingsContainer.SetLevelStars(id, stars);
+		
+		AchievementManager.GetInstance().EventComplete();
+		
+		Game.GetInstance().CompleteScreen(score, stars);
 	}
 	
 	private void onLevelStarted(int level)
@@ -140,6 +149,8 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		
 		// Show figure Limit
 		ui.updateFigureLimit(figureLimit);
+		
+		AchievementManager.GetInstance().EventStart(level);
 	}
 	
 	public void AddScore(int type, int mobs)
