@@ -35,6 +35,7 @@ public class Game : MonoBehaviour
 	public bool musicOnPauseMenu = true;
 	
 	public LevelController levelController;
+	public AchievementUnlockAlert ahievementUnlockAlert;	
 	
 	private int level = 0; 
 	private GameMode mode; 
@@ -343,5 +344,10 @@ public class Game : MonoBehaviour
 	public GameState GetGameState()
 	{
 		return gameState;
+	}
+	
+	public void AlertUnlockAchievement(AchievementManager.Achievement achieve)
+	{
+		ahievementUnlockAlert.alert(achieve);
 	}
 }
