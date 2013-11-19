@@ -14,7 +14,7 @@ public class AchievementManager : MonoBehaviour
 	{
 		if (_instance == null) {
 			_instance = (AchievementManager)FindObjectOfType(typeof(AchievementManager));
- 
+			
 			if ( FindObjectsOfType(typeof(AchievementManager)).Length > 1 )
 			{
 				Debug.LogError("[Singleton] Something went really wrong " +
@@ -115,7 +115,10 @@ public class AchievementManager : MonoBehaviour
 	{
 		if (text.Length > 0) {
 			MethodInfo magicMethod = this.GetType().GetMethod(UppercaseFirst(id)+"ProgressParams");
-	       	object magicValue = magicMethod.Invoke(this, new object[0]{});
+			if (magicMethod == null) {
+				return text;
+			}
+			object magicValue = magicMethod.Invoke(this, new object[0]{});
 			int[] progressParams = (int[])magicValue;
 			object[] args = new object[progressParams.Length];
 			progressParams.CopyTo(args, 0);			
@@ -125,12 +128,12 @@ public class AchievementManager : MonoBehaviour
 	}
 	
 	public string UppercaseFirst(string s)
-    {
+	{
 		if (string.IsNullOrEmpty(s)) {
-	    	return string.Empty;
+			return string.Empty;
 		}
 		return char.ToUpper(s[0]) + s.Substring(1);
-    }
+	}
 	
 	public bool IsCompleted(string id)
 	{
@@ -145,7 +148,10 @@ public class AchievementManager : MonoBehaviour
 		foreach(Achievement a in _achievements) {
 			if (!a.IsCompleted()) {
 				magicMethod = this.GetType().GetMethod(UppercaseFirst(a.id)+"Trigger");
-        		magicValue = magicMethod.Invoke(this, new object[0]{});
+				if (magicMethod == null) {
+					continue;
+				}
+				magicValue = magicMethod.Invoke(this, new object[0]{});
 				completed = (bool)magicValue;
 				if (completed) {
 					PlayerPrefs.SetInt("achi_"+a.id+"_completed", 1);
@@ -226,16 +232,6 @@ public class AchievementManager : MonoBehaviour
 	}
 	
 	public bool Achi2Trigger()
-	{
-		return false;
-	}
-	
-	public int[] Achi3ProgressParams()
-	{
-		return new int[2]{1,6};
-	}
-	
-	public bool Achi3Trigger()
 	{
 		return false;
 	}
