@@ -171,7 +171,11 @@ public class AchievementManager : MonoBehaviour
 			}
 		}
 	}
-	
+
+	public void ClearTrackingVars()
+	{
+		failsCount = 0;
+	}
 	
 	
 	

@@ -72,6 +72,7 @@ public class Game : MonoBehaviour
 	public void MenuSurvivalMode()
 	{
 		PlayerPrefs.DeleteAll();
+		AchievementManager.GetInstance().ClearTrackingVars();
 		//mode = GameMode.Survival;
 		//MenuPause();
 		//---------------------
