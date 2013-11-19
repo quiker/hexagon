@@ -73,8 +73,9 @@ public class AchievementManager : MonoBehaviour
 	// --------------------------------------------
 	
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
+		Debug.Log("LoadAhieves");
 		Load();
 		failsCount = PlayerPrefs.GetInt("achi_fails_count", 0);
 	}
@@ -109,6 +110,16 @@ public class AchievementManager : MonoBehaviour
 			achievements[i].progress    = N[i]["progress"];
 			achievements[i].achievementManager = this;
 		}
+	}
+	
+	public Achievement GetAchieveById(string id) {
+		foreach(Achievement achieve in achievements) {
+			if (achieve.id == id ) {
+				return achieve;
+			}
+		}
+		
+		return null;
 	}
 	
 	public string ProcessProgressText(string id, string text)
