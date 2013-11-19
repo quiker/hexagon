@@ -71,8 +71,9 @@ public class Game : MonoBehaviour
 	
 	public void MenuSurvivalMode()
 	{
-		mode = GameMode.Survival;
-		MenuPause();
+		PlayerPrefs.DeleteAll();
+		//mode = GameMode.Survival;
+		//MenuPause();
 		//---------------------
 	}
 	
@@ -103,7 +104,6 @@ public class Game : MonoBehaviour
 	
 	public void Quit()
 	{
-		PlayerPrefs.DeleteAll();
 		Application.Quit();
 	}
 	
