@@ -20,6 +20,7 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	private int[] colors;
 	private float[][] actions;
 	private int score = 0;
+	private bool ticking = true;
 	
 	public UIController ui = null;
 	
@@ -28,14 +29,23 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		currentFigure.Tick();
 	}
 	
+	public void AutoConnect()
+	{
+		if (ticking) {
+			while(currentFigure.Tick()){}
+		}
+	}
+	
 	public void OnConnectStart()
 	{
+		ticking = false;
 		ticker.Stop();
 		core.Connect(currentFigure.figure);
 	}
 	
 	public void OnConnectFinish()
 	{
+		ticking = true;
 		ticker.Resume();
 		currentFigure.NewFigure();
 		figureLimit--;

@@ -62,6 +62,7 @@ public class AchievementManager : MonoBehaviour
 	private Achievement[] _achievements;
 	public Achievement[] achievements {
 		get {
+			Sort();
 			return this._achievements;
 		}
 	}
@@ -75,7 +76,6 @@ public class AchievementManager : MonoBehaviour
 	// Use this for initialization
 	void Awake ()
 	{
-		Debug.Log("LoadAhieves");
 		Load();
 		failsCount = PlayerPrefs.GetInt("achi_fails_count", 0);
 	}
@@ -83,6 +83,23 @@ public class AchievementManager : MonoBehaviour
 	void OnApplicationQuit()
 	{
 		PlayerPrefs.SetInt("achi_fails_count", failsCount);
+	}
+	
+	void Sort()
+	{
+		Achievement temp;
+		for (int i = 0; i < _achievements.Length-1; i++) {
+			for (int j = i+1; j < _achievements.Length; j++) {
+				if (
+					!_achievements[i].IsCompleted() && _achievements[j].IsCompleted() ||
+					(_achievements[i].IsCompleted() == _achievements[j].IsCompleted() && _achievements[i].name.CompareTo(_achievements[j].name) > 0)
+				) {
+					temp = _achievements[i];
+					_achievements[i] = _achievements[j];
+					_achievements[j] = temp;
+				}
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -103,17 +120,17 @@ public class AchievementManager : MonoBehaviour
 		_achievements = new Achievement[N.Count];
 		
 		for(int i = 0; i < N.Count; i++) {
-			achievements[i] = new Achievement();
-			achievements[i].id          = N[i]["id"];
-			achievements[i].name        = N[i]["name"];
-			achievements[i].description = N[i]["description"];
-			achievements[i].progress    = N[i]["progress"];
-			achievements[i].achievementManager = this;
+			_achievements[i] = new Achievement();
+			_achievements[i].id          = N[i]["id"];
+			_achievements[i].name        = N[i]["name"];
+			_achievements[i].description = N[i]["description"];
+			_achievements[i].progress    = N[i]["progress"];
+			_achievements[i].achievementManager = this;
 		}
 	}
 	
 	public Achievement GetAchieveById(string id) {
-		foreach(Achievement achieve in achievements) {
+		foreach(Achievement achieve in _achievements) {
 			if (achieve.id == id ) {
 				return achieve;
 			}
@@ -236,6 +253,32 @@ public class AchievementManager : MonoBehaviour
 	{
 		Debug.Log ("Achi1Trigger");
 		if (failsCount >= 4) {
+			return true;
+		}
+		return false;
+	}
+	public int[] Achi4ProgressParams()
+	{
+		return new int[2]{Math.Min(failsCount,4),4};
+	}
+	
+	public bool Achi4Trigger()
+	{
+		Debug.Log ("Achi1Trigger");
+		if (failsCount >= 4) {
+			return true;
+		}
+		return false;
+	}
+	public int[] Achi7ProgressParams()
+	{
+		return new int[2]{Math.Min(failsCount,3),3};
+	}
+	
+	public bool Achi7Trigger()
+	{
+		Debug.Log ("Achi1Trigger");
+		if (failsCount >= 3) {
 			return true;
 		}
 		return false;

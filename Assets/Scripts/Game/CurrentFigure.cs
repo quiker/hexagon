@@ -33,14 +33,14 @@ public class CurrentFigure : MonoBehaviour
 		
 	}
 	
-	public void Tick()
+	public bool Tick()
 	{
 		if (figure.isCollisionLeftDownWall()) {
-			MoveRightDown(true);
+			return MoveRightDown(true);
 		} else if (figure.isCollisionRightDownWall()) {
-			MoveLeftDown(true);
+			return MoveLeftDown(true);
 		} else {
-			MoveDown();
+			return MoveDown();
 		}
 	}
 	

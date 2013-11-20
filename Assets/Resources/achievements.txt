@@ -1,7 +1,7 @@
 [
 	{
 		"id": "achi1",
-		"name": "First Achievement",
+		"name": "XFirst Achievement",
 		"description": "Loose 4 times",
 		"progress": "{0} of {1}"
 	},{
@@ -14,37 +14,33 @@
 		"name": "Third Achievement",
 		"description": "Spend in game 10 minutes",
 		"progress": "{0} of {1}"
-	}
-	
-		{
-		"id": "achi1",
+	},{
+		"id": "achi4",
 		"name": "First Achievement",
 		"description": "Loose 4 times",
 		"progress": "{0} of {1}"
 	},{
-		"id": "achi2",
+		"id": "achi5",
 		"name": "Second Achievement",
 		"description": "Kill 20 mobs",
 		"progress": "{0} of {1} mobs killed"
 	},{
-		"id": "achi3",
+		"id": "achi6",
 		"name": "Third Achievement",
 		"description": "Spend in game 10 minutes",
 		"progress": "{0} of {1}"
-	}
-	
-		{
-		"id": "achi1",
-		"name": "First Achievement",
-		"description": "Loose 4 times",
+	},{
+		"id": "achi7",
+		"name": "AFirst Achievement",
+		"description": "Loose 3 times",
 		"progress": "{0} of {1}"
 	},{
-		"id": "achi2",
+		"id": "achi8",
 		"name": "Second Achievement",
 		"description": "Kill 20 mobs",
 		"progress": "{0} of {1} mobs killed"
 	},{
-		"id": "achi3",
+		"id": "achi9",
 		"name": "Third Achievement",
 		"description": "Spend in game 10 minutes",
 		"progress": "{0} of {1}"

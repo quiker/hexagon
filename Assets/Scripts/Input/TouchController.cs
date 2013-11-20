@@ -31,21 +31,21 @@ public class TouchController : MonoBehaviour
 	void Update () {
 		foreach (Touch T in Input.touches) {
 			Vector2 P = T.position;
-	       	
+			
 			if (T.phase == TouchPhase.Began && SwipeID == -1) {
 				SwipeID = T.fingerId;
 				StartPos = P;
 			} else if (T.fingerId == SwipeID) {
 				Vector2 delta = P - StartPos;
 				if (T.phase == TouchPhase.Moved && delta.magnitude > minMovement) {
-	          		SwipeID = -1;
-	          		if (Mathf.Abs (delta.x) > Mathf.Abs (delta.y)) {
+					SwipeID = -1;
+					if (Mathf.Abs (delta.x) > Mathf.Abs (delta.y)) {
 						if (delta.x > 0) {
 							OnSwipe(P, "right");
 						} else {
 							OnSwipe(P, "left");
-	              		}
-	          		} else {
+						}
+					} else {
 						if (delta.y > 0) {
 							OnSwipe(P, "up");
 						} else {
@@ -67,7 +67,7 @@ public class TouchController : MonoBehaviour
 			} else if (T.fingerId == MoveID) {
 				Vector2 delta = P - MoveStartPos;
 				if (T.phase == TouchPhase.Moved && Mathf.Abs(delta.x) > step) {
-	          		if (delta.x < 0) {
+					if (delta.x < 0) {
 						OnStepLeft(P);
 					} else {
 						OnStepRight(P);
@@ -76,6 +76,8 @@ public class TouchController : MonoBehaviour
 				} else if (T.phase == TouchPhase.Moved && Mathf.Abs(delta.y) > step) {
 					if (delta.y < 0) {
 						OnStepDown(P);
+					} else {
+						OnStepUp(P);
 					}
 					MoveStartPos.y = P.y;
 				} else if (T.phase == TouchPhase.Canceled || T.phase == TouchPhase.Ended) {
@@ -87,7 +89,9 @@ public class TouchController : MonoBehaviour
 	
 	void OnSwipe(Vector2 startPos, string direction)
 	{
-		
+		if (direction == "up") {
+			Game.GetInstance().GetLevelController().AutoConnect();
+		}
 	}
 	
 	void OnTouch(Vector2 pos)
@@ -105,6 +109,11 @@ public class TouchController : MonoBehaviour
 		}
 	}
 	
+	void OnStepUp(Vector2 pos)
+	{
+		
+	}
+	
 	void OnStepLeft(Vector2 pos)
 	{
 		currentFigure.MoveLeft();
@@ -117,6 +126,6 @@ public class TouchController : MonoBehaviour
 	
 	void OnStepDown(Vector2 pos)
 	{
-		currentFigure.Tick();
+		Game.GetInstance().GetLevelController().OnTick();
 	}
 }

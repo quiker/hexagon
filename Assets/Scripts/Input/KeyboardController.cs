@@ -26,7 +26,10 @@ public class KeyboardController : MonoBehaviour {
 			currentFigure.MoveRight();
 		}
 		if (Input.GetKey(KeyCode.S)) {
-			currentFigure.Tick();
+			Game.GetInstance().GetLevelController().OnTick();
+		}
+		if (Input.GetKeyDown(KeyCode.W)) {
+			Game.GetInstance().GetLevelController().AutoConnect();
 		}
 		if (Input.GetKeyDown(KeyCode.Q)) {
 			currentFigure.RotateCCW();
