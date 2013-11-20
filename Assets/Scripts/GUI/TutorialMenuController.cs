@@ -20,7 +20,7 @@ public class TutorialMenuController : AbstractTutorialController {
 		return MenuPanel.Tutorial;
 	}
 	
-	void OnEnable() {
+	protected override void OnShow() {	
 		// get available slides
 		SetAvailablesSlides(SettingsContainer.GetAvailableSlides());
 	}

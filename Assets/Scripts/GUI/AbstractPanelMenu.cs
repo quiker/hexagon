@@ -6,14 +6,14 @@ abstract public class AbstractPanelMenu : MonoBehaviour {
 	
 	public void hide() {
 		if (panel != null) {
-			enabled = false;
+			OnHide();
 			panel.gameObject.SetActive(false);
 		}
 	}
 	
 	public void show() {
 		if (panel != null) {
-			enabled = true;
+			OnShow();
 			panel.gameObject.SetActive(true);
 		}
 	}
@@ -23,4 +23,10 @@ abstract public class AbstractPanelMenu : MonoBehaviour {
 	}
 	
 	abstract public MenuPanel getId();
+	
+	protected virtual void OnShow() {
+	}
+	
+	protected virtual void OnHide() {
+	}
 }

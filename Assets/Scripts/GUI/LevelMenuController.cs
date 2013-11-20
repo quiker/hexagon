@@ -60,7 +60,6 @@ public class LevelMenuController : AbstractPanelMenu {
 	
 	public override MenuPanel getId() {
 		return MenuPanel.Level;
-	}
-	
+	}	
 }
 

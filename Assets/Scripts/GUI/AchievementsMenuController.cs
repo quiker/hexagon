@@ -7,8 +7,8 @@ public class AchievementsMenuController : AbstractPanelMenu {
 	public Transform achievePrefub;
 	private List<Transform> achieveList;
 	
-	void OnAchievElementDraw(Transform achievObject) {
-		AchievementManager.Achievement achieve = AchievementManager.GetInstance().GetAchieveById(achievObject.name);
+	void OnAchievElementDraw(Transform achievObject, AchievementManager.Achievement achieve) {
+		//AchievementManager.Achievement achieve = AchievementManager.GetInstance().GetAchieveById(achievObject.name);
 		
 		UISlicedSprite slisedSprite = achievObject.Find("BG").GetComponent<UISlicedSprite>();
 		UILabel title = achievObject.Find("Title").GetComponent<UILabel>();
@@ -27,7 +27,7 @@ public class AchievementsMenuController : AbstractPanelMenu {
 			Transform achieveObject = Instantiate(achievePrefub, new Vector3(0, 0, 0), Quaternion.identity) as Transform;
 			achieveObject.parent = grid.transform;
 			achieveObject.name = achieve.id;
-			OnAchievElementDraw(achieveObject);
+			OnAchievElementDraw(achieveObject, achieve);
 		}
 		
 		grid.repositionNow = true;
@@ -39,12 +39,14 @@ public class AchievementsMenuController : AbstractPanelMenu {
 		}
 	}
 	
-	void OnEnable() {
-		DestroyChildrens();
-		Load();
-	}
 	
 	public override MenuPanel getId() {
 		return MenuPanel.Achievements;
+	}
+	
+	
+	protected override void OnShow() {
+		DestroyChildrens();
+		Load();
 	}
 }

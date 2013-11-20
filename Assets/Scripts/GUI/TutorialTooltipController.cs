@@ -17,6 +17,5 @@ public class TutorialTooltipController : AbstractTutorialController {
 	
 	public override MenuPanel getId() {
 		return MenuPanel.TutorialTooltip;
-	}
-	
+	}	
 }
