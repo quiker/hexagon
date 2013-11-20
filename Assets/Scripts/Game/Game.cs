@@ -348,6 +348,7 @@ public class Game : MonoBehaviour
 	
 	public void AlertUnlockAchievement(AchievementManager.Achievement achieve)
 	{
+		Debug.Log("Unlock achive: " + achieve.name);
 		ahievementUnlockAlert.alert(achieve);
 	}
 }
