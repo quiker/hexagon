@@ -5,6 +5,7 @@ public class SettingsMenuController : AbstractPanelMenu {
 	public UICheckbox mute;
 	public UISlider musicValue;
 	public UISlider soundsValue;
+	public AudioClip testVolumeSound;
 		
 	void onMuteChecked(GameObject go) {
 		if (mute != null) {
@@ -35,6 +36,12 @@ public class SettingsMenuController : AbstractPanelMenu {
 	void OnGUI() {
 		if (mute != null) {
 			mute.isChecked = SettingsContainer.GetMuteFlag();
+		}
+	}
+	// When soundsValue is pressed
+	void OnState(int pressed) {
+		if (pressed == 1) {
+			NGUITools.PlaySound(testVolumeSound);
 		}
 	}
 	
