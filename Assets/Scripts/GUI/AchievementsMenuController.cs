@@ -17,36 +17,31 @@ public class AchievementsMenuController : AbstractPanelMenu {
 		
 		title.text = achieve.name;
 		description.text = achieve.description;
-		progress.text = achieve.GetProgressText();
+		progress.text = achieve.IsCompleted() ? "" : achieve.GetProgressText();
 		
-		slisedSprite.spriteName = achieve.IsCompleted() ? "Glow" : "Dark";
-		
+		slisedSprite.spriteName = achieve.IsCompleted() ? "Glow" : "Dark";	
 	}
 	
-	void updateList() {
-		foreach (Transform achieve in achieveList) {
-			OnAchievElementDraw(achieve);
-		}
-	}
-	
-	void Start() {
-		achieveList = new List<Transform>();
-		
+	void Load() {
 		foreach (AchievementManager.Achievement achieve in AchievementManager.GetInstance().achievements) {
 			Transform achieveObject = Instantiate(achievePrefub, new Vector3(0, 0, 0), Quaternion.identity) as Transform;
 			achieveObject.parent = grid.transform;
 			achieveObject.name = achieve.id;
 			OnAchievElementDraw(achieveObject);
-			achieveList.Add(achieveObject);
 		}
 		
 		grid.repositionNow = true;
 	}
 	
-	void OnEnable() {
-		if (achieveList != null && achieveList.Count > 0) {
-			updateList();
+	void DestroyChildrens() {
+		foreach (Transform childTransform in grid.transform) {
+		    Destroy(childTransform.gameObject);
 		}
+	}
+	
+	void OnEnable() {
+		DestroyChildrens();
+		Load();
 	}
 	
 	public override MenuPanel getId() {

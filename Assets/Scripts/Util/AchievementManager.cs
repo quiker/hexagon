@@ -183,7 +183,7 @@ public class AchievementManager : MonoBehaviour
 				completed = (bool)magicValue;
 				if (completed) {
 					PlayerPrefs.SetInt("achi_"+a.id+"_completed", 1);
-					Game.GetInstance().AlertUnlockAchievement(a);
+					Game.GetInstance().AlertUnlockAchievement(a);					
 				}
 			}
 		}
