@@ -53,6 +53,8 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 		// Update figure limit
 		ui.updateFigureLimit(figureLimit);
 		
+		AchievementManager.GetInstance().EventConnect();
+		
 		int mobCount = 0;
 		foreach(Pin pin in core.figure.pins) {
 			if (pin.type != Pin.PIN_TYPE_PILL) {

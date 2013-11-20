@@ -40,7 +40,7 @@ public class SettingsMenuController : AbstractPanelMenu {
 	}
 	// When soundsValue is pressed
 	void OnState(int pressed) {
-		if (pressed == 1) {
+		if (pressed == 0) {
 			NGUITools.PlaySound(testVolumeSound);
 		}
 	}

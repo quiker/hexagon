@@ -52,7 +52,7 @@ public class AchievementManager : MonoBehaviour
 		
 		public string GetProgressText()
 		{
-			if (progress.Length > 0) {
+			if (progress != null && progress.Length > 0) {
 				return _achievementManager.ProcessProgressText(id, progress);
 			}
 			return "";
@@ -71,6 +71,8 @@ public class AchievementManager : MonoBehaviour
 	
 	// tracking vars ------------------------------
 	int failsCount;
+	int levelConnects;
+	bool levelCompleted;
 	// --------------------------------------------
 	
 	// Use this for initialization
@@ -78,6 +80,7 @@ public class AchievementManager : MonoBehaviour
 	{
 		Load();
 		failsCount = PlayerPrefs.GetInt("achi_fails_count", 0);
+		levelConnects = 0;
 	}
 	
 	void OnApplicationQuit()
@@ -141,7 +144,7 @@ public class AchievementManager : MonoBehaviour
 	
 	public string ProcessProgressText(string id, string text)
 	{
-		if (text.Length > 0) {
+		if (text != null && text.Length > 0) {
 			MethodInfo magicMethod = this.GetType().GetMethod(UppercaseFirst(id)+"ProgressParams");
 			if (magicMethod == null) {
 				return text;
@@ -192,6 +195,8 @@ public class AchievementManager : MonoBehaviour
 	public void ClearTrackingVars()
 	{
 		failsCount = 0;
+		levelConnects = 0;
+		levelCompleted = false;
 	}
 	
 	
@@ -200,6 +205,8 @@ public class AchievementManager : MonoBehaviour
 	public void EventStart(int level)
 	{
 		//
+		levelCompleted = false;
+		levelConnects = 0;
 	}
 	
 	public void EventFail()
@@ -212,6 +219,7 @@ public class AchievementManager : MonoBehaviour
 	public void EventComplete()
 	{
 		//
+		levelCompleted = true;
 		CheckAll();
 	}
 	
@@ -228,6 +236,7 @@ public class AchievementManager : MonoBehaviour
 	public void EventConnect()
 	{
 		//
+		levelConnects++;
 	}
 	
 	public void EventDestroy()
@@ -284,14 +293,9 @@ public class AchievementManager : MonoBehaviour
 		return false;
 	}
 	
-	public int[] Achi2ProgressParams()
-	{
-		return new int[2]{1,5};
-	}
-	
 	public bool Achi2Trigger()
 	{
-		return false;
+		return levelCompleted && levelConnects == 1;
 	}
 	
 }

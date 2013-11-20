@@ -6,9 +6,9 @@
 		"progress": "{0} of {1}"
 	},{
 		"id": "achi2",
-		"name": "Second Achievement",
-		"description": "Kill 20 mobs",
-		"progress": "{0} of {1} mobs killed"
+		"name": "Brutalus",
+		"description": "Complete level in one step",
+		"progress": ""
 	},{
 		"id": "achi3",
 		"name": "Third Achievement",
