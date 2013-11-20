@@ -184,9 +184,6 @@ public class AchievementManager : MonoBehaviour
 				if (completed) {
 					PlayerPrefs.SetInt("achi_"+a.id+"_completed", 1);
 					Game.GetInstance().AlertUnlockAchievement(a);
-					Game.GetInstance().AlertUnlockAchievement(a);
-					Game.GetInstance().AlertUnlockAchievement(a);
-					Game.GetInstance().AlertUnlockAchievement(a);					
 				}
 			}
 		}
