@@ -8,6 +8,8 @@ public class Pin : MonoBehaviour
 	public const int PIN_TYPE_MOB1 = 2;
 	public const int PIN_TYPE_MOB2 = 3;
 	public const int PIN_TYPE_MOB3 = 4;
+	public const int PIN_TYPE_MOB4 = 5;
+	public const int PIN_TYPE_MOB5 = 6;
 	
 	public class MobAction {
 		public int id;
@@ -123,6 +125,7 @@ public class Pin : MonoBehaviour
 	
 	public void RealDestroyPin()
 	{
+		AchievementManager.GetInstance().EventDestroyPin(_type, _color);
 		Destroy(gameObject);
 	}
 	

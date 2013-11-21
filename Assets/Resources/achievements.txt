@@ -1,48 +1,58 @@
 [
 	{
-		"id": "achi1",
-		"name": "XFirst Achievement",
+		"id": "looser",
+		"name": "Looser",
 		"description": "Loose 4 times",
 		"progress": "{0} of {1}"
 	},{
-		"id": "achi2",
+		"id": "winner",
+		"name": "Winner",
+		"description": "Win 4 times",
+		"progress": "{0} of {1}"
+	},{
+		"id": "brutalus",
 		"name": "Brutalus",
 		"description": "Complete level in one step",
 		"progress": ""
 	},{
-		"id": "achi3",
-		"name": "Third Achievement",
+		"id": "practicant",
+		"name": "Practicant",
 		"description": "Spend in game 10 minutes",
 		"progress": "{0} of {1}"
 	},{
-		"id": "achi4",
-		"name": "First Achievement",
-		"description": "Loose 4 times",
+		"id": "pharmacist",
+		"name": "Pharmacist",
+		"description": "Destroy 300 pills",
 		"progress": "{0} of {1}"
 	},{
-		"id": "achi5",
-		"name": "Second Achievement",
-		"description": "Kill 20 mobs",
+		"id": "killer",
+		"name": "Killer",
+		"description": "Kill 50 mobs",
 		"progress": "{0} of {1} mobs killed"
 	},{
-		"id": "achi6",
-		"name": "Third Achievement",
-		"description": "Spend in game 10 minutes",
-		"progress": "{0} of {1}"
-	},{
-		"id": "achi7",
-		"name": "AFirst Achievement",
-		"description": "Loose 3 times",
-		"progress": "{0} of {1}"
-	},{
-		"id": "achi8",
-		"name": "Second Achievement",
-		"description": "Kill 20 mobs",
+		"id": "white_killer",
+		"name": "White killer",
+		"description": "Kill 10 white mobs",
 		"progress": "{0} of {1} mobs killed"
 	},{
-		"id": "achi9",
-		"name": "Third Achievement",
-		"description": "Spend in game 10 minutes",
-		"progress": "{0} of {1}"
+		"id": "red_killer",
+		"name": "Red killer",
+		"description": "Kill 10 red mobs",
+		"progress": "{0} of {1} mobs killed"
+	},{
+		"id": "green_killer",
+		"name": "Green killer",
+		"description": "Kill 10 green mobs",
+		"progress": "{0} of {1} mobs killed"
+	},{
+		"id": "blue_killer",
+		"name": "Blue killer",
+		"description": "Kill 10 blue mobs",
+		"progress": "{0} of {1} mobs killed"
+	},{
+		"id": "yellow_killer",
+		"name": "Yellow killer",
+		"description": "Kill 10 yellow mobs",
+		"progress": "{0} of {1} mobs killed"
 	}
 ]
