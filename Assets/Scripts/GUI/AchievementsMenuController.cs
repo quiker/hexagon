@@ -23,10 +23,12 @@ public class AchievementsMenuController : AbstractPanelMenu {
 	}
 	
 	void Load() {
+		int i = 0;
 		foreach (AchievementManager.Achievement achieve in AchievementManager.GetInstance().achievements) {
 			Transform achieveObject = Instantiate(achievePrefub, new Vector3(0, 0, 0), Quaternion.identity) as Transform;
 			achieveObject.parent = grid.transform;
-			achieveObject.name = achieve.id;
+			i++;
+			achieveObject.name = "achieve_"+i;//achieve.id;
 			OnAchievElementDraw(achieveObject, achieve);
 		}
 		
