@@ -6,6 +6,10 @@ public class LevelMenuController : AbstractPanelMenu {
 	public string EnableSprite = "Glow";
 	public string DisableSprite = "Dark";
 	public string ButtonCallbackFunctionName = "onLevelSelected";
+	public GameObject buttonNext;
+	public GameObject buttonBack;
+	public int countLevels = 35;
+	public Tile tile;
 	
 	// When level will be select
 	void onLevelSelected(GameObject go) {
@@ -13,15 +17,25 @@ public class LevelMenuController : AbstractPanelMenu {
 		Game.GetInstance().MenuStartLevel(levelIndex);
 	}
 	
+	void OnButtonBackClick(GameObject go) {
+		if (tile.GetCurrentGridIndex() > 0) {
+			tile.BackGrid();
+		}
+	}
+	
+	void OnButtonNextClick(GameObject go) {
+		if (tile.GetCurrentGridIndex() < tile.GetCountGrids() - 1) {
+			tile.NextGrid();
+		}
+	}
+	
 	
 	private void setButtonEnable(Transform button, bool enabled) {
 		UIButtonColor buttonColor   = button.GetComponent<UIButtonColor>();
 		UISlicedSprite slicedPrite  = button.transform.Find("SlicedSprite").GetComponent<UISlicedSprite>();
-		UIButtonOffset buttonOffset = button.GetComponent<UIButtonOffset>();
 		UIButtonSound buttonSound   = button.GetComponent<UIButtonSound>();
 		
 		buttonColor.enabled  = enabled;
-		buttonOffset.enabled = enabled;
 		buttonSound.enabled  = enabled;
 		slicedPrite.spriteName = enabled ? EnableSprite : DisableSprite;
 	}
@@ -29,7 +43,11 @@ public class LevelMenuController : AbstractPanelMenu {
 	private void setButtonMessage(Transform button, bool enabled) {
 		UIButtonMessage buttonMessage = button.GetComponent<UIButtonMessage>();
 		
-		if (enabled) {
+		if (buttonMessage == null) {
+			buttonMessage = button.gameObject.AddComponent<UIButtonMessage>();
+		}
+		
+		if (enabled) {			
 			buttonMessage.target = gameObject;
 			buttonMessage.functionName = ButtonCallbackFunctionName;
 		}
@@ -61,5 +79,14 @@ public class LevelMenuController : AbstractPanelMenu {
 	public override MenuPanel getId() {
 		return MenuPanel.Level;
 	}	
+	
+	protected override void OnShow () {
+		if (!tile.isGenerated()) {
+			tile.Generate(countLevels);
+			tile.ActivateGrid(0);
+		}else{
+			tile.UpdateLevels();
+		}
+	}
 }
 

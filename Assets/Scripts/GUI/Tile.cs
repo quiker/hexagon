@@ -3,47 +3,113 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
-	public int RowCount = 2;
-	public int ColCount = 5;
-	public int MarginTop = 0;
-	public int MarginLeft = 0;
 	public Transform ButtonPrefub = null;
 	public GameObject Controller;
 	public string FunctionName = ""; 
-	private List<Transform> tileList;
+	private List<Transform> levelList;
+	private List<Transform> gridList;
+	public UIGrid gridWrapper = null;
+	public int countElementsPerGrid = 20;
+	public int gridCellWidth = 120;
+	public int gridCellHeight = 120;
+	public int gridMaxPerLine = 4;
+	public Vector3 gridPosition; 
+	private int currentGridIndex = 0;
+	private int currentDirection = -1; // 1 - right, -1 - left
+	public float slideSpeed = 12.56f;
+	public Vector3 initWrapperPosition; 
 	
 	
-	public void updateTile() {
-		for (int i = 0; i < tileList.Count; i++) {
-			Controller.SendMessage(FunctionName, tileList[i], SendMessageOptions.DontRequireReceiver);
+	public void ActivateGrid(int gridIndex) {
+		currentGridIndex = gridIndex;
+	}
+	
+	public int GetCountGrids() {
+		return gridList.Count;
+	}
+	
+	public int GetCurrentGridIndex() {
+		return currentGridIndex;
+	}
+	
+	public void UpdateLevels() {
+		for (int i = 0; i < levelList.Count; i++) {
+			Controller.SendMessage(FunctionName, levelList[i], SendMessageOptions.DontRequireReceiver);
 		}
+	}
+	
+	void Update() {
+		float reqPosition = initWrapperPosition.x - (GetCurrentGridIndex() * gridWrapper.cellWidth);
+				
+		if (gridWrapper.transform.position.x != reqPosition) {
+			float diffPosition = Mathf.Abs(gridWrapper.transform.position.x - reqPosition);;
+			float speed = diffPosition > slideSpeed/* * Time.deltaTime*/ ? slideSpeed : diffPosition;
+			gridWrapper.transform.Translate(new Vector3(currentDirection * speed/* * Time.deltaTime*/, 0, 0));
+		}
+	}
+	
+	public void NextGrid() {
+		currentDirection = -1;
+		ActivateGrid(++currentGridIndex);
+	}
+	
+	public void BackGrid() {
+		currentDirection = 1;
+		ActivateGrid(--currentGridIndex);
+	}
+	
+	public bool isGenerated() {
+		return levelList.Count > 0;
+	}
+	
+	public void DestroyLevels() {
+		foreach (Transform childTransform in gridWrapper.transform) {
+		    Destroy(childTransform.gameObject);
+		}
+	}
+	
+	private Transform GetLastGrid() {
+		if (gridList.Count > 0) {
+			if (gridList[gridList.Count - 1].transform.childCount < countElementsPerGrid) {
+				return gridList[gridList.Count - 1];
+			}
+		}
+		
+		GameObject gridGO = new GameObject("Grid");
+		gridGO.transform.parent = gridWrapper.transform;
+		gridGO.transform.localPosition = gridPosition;
+		UIGrid tempGrid = gridGO.AddComponent<UIGrid>();
+		tempGrid.cellHeight = gridCellHeight;
+		tempGrid.cellWidth = gridCellWidth;
+		tempGrid.maxPerLine = gridMaxPerLine;
+		tempGrid.arrangement = UIGrid.Arrangement.Horizontal;
+		
+		gridList.Add(gridGO.transform);
+		
+		return gridGO.transform;
+	}
+	
+	public void Generate(int count) {
+		DestroyLevels();
+		
+		for (int i = 0; i < count; i++) {
+			Transform button = Instantiate(ButtonPrefub, new Vector3(0, 0, 0), Quaternion.identity) as Transform;
+			button.transform.parent = GetLastGrid();			
+			button.name = (i + 1).ToString();
+			
+			levelList.Add(button);
+			
+			if (Controller != null) {
+				Controller.SendMessage(FunctionName, button, SendMessageOptions.DontRequireReceiver);
+			}
+		}
+		
+		gridWrapper.repositionNow = true;
 	}
 	
 	void Start() {
-		tileList = new List<Transform>();
-		
-		for (int i = 0; i < RowCount; i++) {
-			for (int j = 0; j < ColCount; j++) {
-				Transform button = Instantiate(ButtonPrefub, new Vector3(-220 + (100 + MarginLeft) * j, 330 - (100 + MarginTop) * i, -40), Quaternion.identity) as Transform;
-				button.parent = gameObject.transform;
-				
-				button.gameObject.AddComponent<UIButtonMessage>();
-								
-				int levelIndex = ColCount * i + j + 1;
-				button.name  = levelIndex.ToString();
-				
-				tileList.Add(button);
-				
-				if (Controller != null) {
-					Controller.SendMessage(FunctionName, button, SendMessageOptions.DontRequireReceiver);
-				}
-			}
-		}
+		levelList = new List<Transform>();
+		gridList  = new List<Transform>();
+		gridWrapper.transform.localPosition = initWrapperPosition;
 	}
-	
-	void OnEnable() {
-		if (tileList != null && tileList.Count > 0) {
-        	updateTile();
-		}
-    }
 }
