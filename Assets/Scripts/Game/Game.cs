@@ -34,6 +34,8 @@ public class Game : MonoBehaviour
 	public GameObject input = null;
 	public bool musicOnPauseMenu = true;
 	
+	public MusicManager musicManager;
+	
 	public LevelController levelController;
 	public AchievementUnlockAlert ahievementUnlockAlert;	
 	
@@ -44,7 +46,10 @@ public class Game : MonoBehaviour
 	
 	void Start()
 	{
-		EnableAudioListener(!SettingsContainer.GetMuteFlag());
+		if (!SettingsContainer.GetMuteFlag()) {
+			musicManager.MainThemeSong();
+		}
+		
 		MenuMainMenu();
 	}
 	
@@ -176,6 +181,7 @@ public class Game : MonoBehaviour
 		// save highscore
 		// save score to score table
 		ActivatePanel(MenuPanel.Complete);
+		musicManager.WinnerSong();
 	}
 	
 	public void FailScreen()
@@ -183,6 +189,7 @@ public class Game : MonoBehaviour
 		StopTime();
 		DisableInput();
 		ActivatePanel(MenuPanel.Fail);
+		musicManager.FailSong();
 	}
 	
 	private void ActivatePanel(MenuPanel panelId)
@@ -265,7 +272,7 @@ public class Game : MonoBehaviour
 		if (pauseStatus == true && !IsPaused()) {
 			MenuPause();
 		}
-		mainThemeSong.enabled = !pauseStatus;
+		//mainThemeSong.enabled = !pauseStatus;
 	}
 	
 	public void SetMute(bool isMute)

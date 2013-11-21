@@ -41,10 +41,14 @@ public class Tile : MonoBehaviour {
 	void Update() {
 		float reqPosition = initWrapperPosition.x - (GetCurrentGridIndex() * gridWrapper.cellWidth);
 				
+		if (currentDirection < 0 && gridWrapper.transform.position.x <= reqPosition) {
+			gridWrapper.transform.localPosition = new Vector3(reqPosition, initWrapperPosition.y, 0);
+		}else if (currentDirection > 0 && gridWrapper.transform.position.x >= reqPosition){
+			gridWrapper.transform.localPosition = new Vector3(reqPosition, initWrapperPosition.y, 0);
+		}
+		
 		if (gridWrapper.transform.position.x != reqPosition) {
-			float diffPosition = Mathf.Abs(gridWrapper.transform.position.x - reqPosition);;
-			float speed = diffPosition > slideSpeed/* * Time.deltaTime*/ ? slideSpeed : diffPosition;
-			gridWrapper.transform.Translate(new Vector3(currentDirection * speed/* * Time.deltaTime*/, 0, 0));
+			gridWrapper.transform.Translate(new Vector3(currentDirection * slideSpeed/* * Time.deltaTime*/, 0, 0));
 		}
 	}
 	
@@ -107,7 +111,7 @@ public class Tile : MonoBehaviour {
 		gridWrapper.repositionNow = true;
 	}
 	
-	void Start() {
+	void OnEnable() {
 		levelList = new List<Transform>();
 		gridList  = new List<Transform>();
 		gridWrapper.transform.localPosition = initWrapperPosition;

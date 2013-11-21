@@ -6,15 +6,15 @@ abstract public class AbstractPanelMenu : MonoBehaviour {
 	
 	public void hide() {
 		if (panel != null) {
-			OnHide();
 			panel.gameObject.SetActive(false);
+			OnHide();
 		}
 	}
 	
 	public void show() {
 		if (panel != null) {
-			OnShow();
 			panel.gameObject.SetActive(true);
+			OnShow();
 		}
 	}
 	
