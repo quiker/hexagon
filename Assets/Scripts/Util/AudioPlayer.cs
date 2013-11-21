@@ -5,6 +5,7 @@ using System;
 public class AudioPlayer : MonoBehaviour {
 	public AudioClip[] playlist = null;
 	public GameObject Manager= null;
+	public float volumePerFrame = 1;
 	private int currentPlaylistIndex = 0;
 	private bool applicationPause = false;
 	public string id;
@@ -15,6 +16,10 @@ public class AudioPlayer : MonoBehaviour {
 				if (audio.clip != null) {
 					onClipComplete();
 				}
+			}else{
+				if (audio.volume <= SettingsContainer.GetMusicValue()) {
+					audio.volume += volumePerFrame * RealTime.deltaTime;
+				}
 			}
 		}else{
 			throw new Exception("Playlist is empty");
@@ -23,6 +28,7 @@ public class AudioPlayer : MonoBehaviour {
 	
 	public void Pause() {
 		enabled = false;
+		audio.volume = 0;
 		audio.Pause();
 	}
 	
@@ -32,7 +38,14 @@ public class AudioPlayer : MonoBehaviour {
 	}
 	
 	public void Reset() {
-		audio.clip = playlist[currentPlaylistIndex];
+		audio.playOnAwake = false;
+		audio.loop = false;
+		
+		if (playlist.Length > 0) {
+			audio.clip = playlist[0];
+		}
+		
+		audio.Stop();
 	}
 	
 	
@@ -72,13 +85,7 @@ public class AudioPlayer : MonoBehaviour {
 	}
 	
 	void Start() {
-		if (gameObject.GetComponent<AudioSource>() == null) {
-			gameObject.AddComponent<AudioSource>();
-		}
-		
-		audio.playOnAwake = false;
-		audio.loop = false;
-		audio.clip = playlist[currentPlaylistIndex];
+		Reset();
 		Pause();
 	}
 }

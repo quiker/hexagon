@@ -106,7 +106,7 @@ public class Figure : MonoBehaviour
 	
 	public void RotateCCW()
 	{
-		audio.PlayOneShot(rotateAudioClip);
+		NGUITools.PlaySound(rotateAudioClip);
 		UpdatePosition();
 		foreach (Pin pin in pins) {
 			pin.position = HexVector2.RotateCCW(pin.position);
@@ -116,7 +116,7 @@ public class Figure : MonoBehaviour
 	
 	public void RotateCW()
 	{
-		audio.PlayOneShot(rotateAudioClip);
+		NGUITools.PlaySound(rotateAudioClip);
 		UpdatePosition();
 		foreach (Pin pin in pins) {
 			pin.position = HexVector2.RotateCW(pin.position);

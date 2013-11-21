@@ -67,7 +67,7 @@ public class Core : MonoBehaviour
 			figure.RotateCW();
 			
 			if (rotateAudioClip != null) {
-				audio.PlayOneShot(rotateAudioClip);
+				NGUITools.PlaySound(rotateAudioClip);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ public class Core : MonoBehaviour
 			figure.RotateCCW();
 			
 			if (rotateAudioClip != null) {
-				audio.PlayOneShot(rotateAudioClip);
+				NGUITools.PlaySound(rotateAudioClip);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ public class Core : MonoBehaviour
 		} else {
 			CheckAll();
 			if (!isPinsRemoved) {
-				audio.PlayOneShot(connectAudioClip);
+				NGUITools.PlaySound(connectAudioClip);
 			}
 		}
 	}
@@ -132,7 +132,7 @@ public class Core : MonoBehaviour
 		}
 		
 		if (isPinsRemoved) {
-			audio.PlayOneShot(breakAudioClip);
+			NGUITools.PlaySound(breakAudioClip);
 		}
 		
 		if (needDalay) {

@@ -30,11 +30,10 @@ public class Game : MonoBehaviour
 		
 	public UIController ui;
 	
-	public AudioPlayer mainThemeSong = null;	
 	public GameObject input = null;
 	public bool musicOnPauseMenu = true;
 	
-	public MusicManager musicManager;
+	public AudioManager audioManager;
 	
 	public LevelController levelController;
 	public AchievementUnlockAlert ahievementUnlockAlert;	
@@ -46,10 +45,8 @@ public class Game : MonoBehaviour
 	
 	void Start()
 	{
-		if (!SettingsContainer.GetMuteFlag()) {
-			musicManager.MainThemeSong();
-		}
-		
+		EnableAudioListener(!SettingsContainer.GetMuteFlag());	
+		audioManager.PlayMainThemeSong();
 		MenuMainMenu();
 	}
 	
@@ -181,7 +178,7 @@ public class Game : MonoBehaviour
 		// save highscore
 		// save score to score table
 		ActivatePanel(MenuPanel.Complete);
-		musicManager.WinnerSong();
+		audioManager.PlayWinnerSong();
 	}
 	
 	public void FailScreen()
@@ -189,7 +186,7 @@ public class Game : MonoBehaviour
 		StopTime();
 		DisableInput();
 		ActivatePanel(MenuPanel.Fail);
-		musicManager.FailSong();
+		audioManager.PlayFailSong();
 	}
 	
 	private void ActivatePanel(MenuPanel panelId)
@@ -272,7 +269,6 @@ public class Game : MonoBehaviour
 		if (pauseStatus == true && !IsPaused()) {
 			MenuPause();
 		}
-		//mainThemeSong.enabled = !pauseStatus;
 	}
 	
 	public void SetMute(bool isMute)
@@ -280,10 +276,9 @@ public class Game : MonoBehaviour
 		if (SettingsContainer.GetMuteFlag() != isMute) {
 			SettingsContainer.SetMuteFlag(isMute);
 			
-			if (mainThemeSong != null) {
-				if (musicOnPauseMenu) {
-					EnableAudioListener(!isMute);
-				}
+			if (musicOnPauseMenu) {
+				audioManager.PlayMainThemeSong();
+				EnableAudioListener(!isMute);
 			}
 			
 			SendMessageToAllGameObjects("onGameMute", isMute);
@@ -299,8 +294,7 @@ public class Game : MonoBehaviour
 	
 	public void EnableAudioListener(bool enabled)
 	{
-		Camera cam = GameObject.FindObjectOfType(typeof(Camera)) as Camera;
-		cam.audio.enabled = enabled;
+		(GameObject.FindObjectOfType(typeof(Camera)) as Camera).audio.enabled = enabled;
 		AudioListener.volume = enabled ? 1 : 0;
 	}
 	
@@ -323,24 +317,18 @@ public class Game : MonoBehaviour
 	
 	public void SetMusicValue(float value)
 	{
-		if (mainThemeSong != null) {
-			mainThemeSong.audio.volume = value;
-		}
-		
+		audioManager.SetVolume(value);		
 		SettingsContainer.SetMusicValue(value);
 	}
 	
 	public void SetSoundValue(float value)
 	{
-		float mainThemeSongVolume = mainThemeSong.audio.volume; 
-			
 		foreach (AudioSource aud in GameObject.FindObjectsOfType(typeof(AudioSource))) {
 			aud.volume = value;
 		}
 		
+		audioManager.SetVolume(SettingsContainer.GetMusicValue());
 		SettingsContainer.SetSoundValue(value);
-		
-		mainThemeSong.audio.volume = mainThemeSongVolume;
 	}
 	
 	public GameMode GetGameMode()
