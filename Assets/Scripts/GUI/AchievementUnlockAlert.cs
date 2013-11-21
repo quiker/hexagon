@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class AchievementUnlockAlert : MonoBehaviour {
 	public UILabel achieveText;
+	public Animation alertAnimation;
 	private List<AchievementManager.Achievement> achieveList;
 	
 	
@@ -18,7 +19,8 @@ public class AchievementUnlockAlert : MonoBehaviour {
 	
 	private void playAnimation(AchievementManager.Achievement achieve) {
 		achieveText.text = "[00BB00]Achievement unlocked:[-] " + achieve.name;
-		animation.Play();
+		//animation.Play();
+		ActiveAnimation.Play(alertAnimation, AnimationOrTween.Direction.Forward);
 	}
 	
 	void Update() {
