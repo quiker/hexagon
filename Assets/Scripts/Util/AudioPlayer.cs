@@ -42,7 +42,7 @@ public class AudioPlayer : MonoBehaviour {
 		audio.loop = false;
 		
 		if (playlist.Length > 0) {
-			audio.clip = playlist[0];
+			audio.clip = playlist[currentPlaylistIndex];
 		}
 		
 		audio.Stop();

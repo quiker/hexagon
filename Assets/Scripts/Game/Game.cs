@@ -46,7 +46,11 @@ public class Game : MonoBehaviour
 	void Start()
 	{
 		EnableAudioListener(!SettingsContainer.GetMuteFlag());	
-		audioManager.PlayMainThemeSong();
+		
+		if (!SettingsContainer.GetMuteFlag()) {
+			audioManager.PlayMainThemeSong();
+		}
+		
 		MenuMainMenu();
 	}
 	
