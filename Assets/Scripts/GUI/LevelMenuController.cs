@@ -66,7 +66,7 @@ public class LevelMenuController : AbstractPanelMenu {
 		bool isEnabledLevel = SettingsContainer.GetLevelStars(levelIndex) > 0 || 
 							  levelIndex == 1 || 
 							  SettingsContainer.GetLevelMaxScore(levelIndex) > 0 ||
-							  (levelIndex > 1 && SettingsContainer.GetLevelMaxScore(levelIndex - 1) > 0);
+							  (levelIndex > 1 && SettingsContainer.GetLevelStars(levelIndex - 1) > 0);
 		
 		setButtonEnable(button, isEnabledLevel);
 		setButtonMessage(button, isEnabledLevel);	
