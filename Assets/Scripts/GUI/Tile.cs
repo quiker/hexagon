@@ -48,7 +48,7 @@ public class Tile : MonoBehaviour {
 		}
 		
 		if (gridWrapper.transform.position.x != reqPosition) {
-			gridWrapper.transform.Translate(new Vector3(currentDirection * slideSpeed/* * Time.deltaTime*/, 0, 0));
+			gridWrapper.transform.Translate(new Vector3(currentDirection * slideSpeed * RealTime.deltaTime, 0, 0));
 		}
 	}
 	

@@ -3,6 +3,25 @@ using System.Collections;
 
 public class RealTime : MonoBehaviour
 {
+	private static RealTime _instance = null;
+	
+	protected RealTime () {}
+	
+	public static RealTime GetInstance()
+	{
+		if (_instance == null) {
+			_instance = (RealTime)FindObjectOfType(typeof(RealTime));
+ 
+			if ( FindObjectsOfType(typeof(RealTime)).Length > 1 )
+			{
+				Debug.LogError("[Singleton] Something went really wrong " +
+					" - there should never be more than 1 singleton!" +
+					" Reopenning the scene might fix it.");
+			}
+		}
+		return _instance;
+	}
+	
 	static float mTime = 0f;
 	static float mDelta = 0f;
 
@@ -10,14 +29,16 @@ public class RealTime : MonoBehaviour
 		mTime = Time.realtimeSinceStartup; 
 	}
 	
-	public static float deltaTime { get { return GetDeltaTime(); } }
-	
-
-	public static float GetDeltaTime ()
+	void Update()
 	{
 		float time = Time.realtimeSinceStartup;
 		mDelta = time - mTime;
 		mTime = time;
-		return mDelta;
+	}
+	
+	public static float deltaTime {
+		get {
+			return mDelta;
+		}
 	}
 }
