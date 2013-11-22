@@ -174,6 +174,7 @@ public class Game : MonoBehaviour
 	{
 		StopTime();
 		DisableInput();
+		ui.gameObject.SetActive(false);
 		CompleteScreenController completePanel = GetPanelByName(MenuPanel.Complete) as CompleteScreenController;
 		
 		completePanel.updateScore(score);
@@ -189,6 +190,7 @@ public class Game : MonoBehaviour
 	{
 		StopTime();
 		DisableInput();
+		ui.gameObject.SetActive(false);
 		ActivatePanel(MenuPanel.Fail);
 		audioManager.PlayFailSong();
 	}

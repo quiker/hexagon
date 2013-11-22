@@ -16,11 +16,14 @@ public class AchievementUnlockAlert : MonoBehaviour {
 		achieveList.Add(achieve);
 	}
 	
+	void OnAnimationFinished() {
+		animation.enabled = true;	
+		ActiveAnimation.Reset(alertAnimation);		
+	}
 	
 	private void playAnimation(AchievementManager.Achievement achieve) {
 		achieveText.text = "[00BB00]Achievement unlocked:[-] " + achieve.name;
-		//animation.Play();
-		ActiveAnimation.Play(alertAnimation, AnimationOrTween.Direction.Forward);
+		ActiveAnimation.Play(alertAnimation, AnimationOrTween.Direction.Toggle);
 	}
 	
 	void Update() {
