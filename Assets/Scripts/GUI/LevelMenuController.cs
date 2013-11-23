@@ -37,6 +37,7 @@ public class LevelMenuController : AbstractPanelMenu {
 		
 		buttonColor.enabled  = enabled;
 		buttonSound.enabled  = enabled;
+		button.collider.enabled = enabled;
 		slicedPrite.spriteName = enabled ? EnableSprite : DisableSprite;
 	}
 	
