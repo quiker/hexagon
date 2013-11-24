@@ -57,22 +57,24 @@ public class CurrentFigure : MonoBehaviour
 	
 	public void MoveLeft()
 	{
-		bool moved;
-		if (horizontalMoveDown) {
+		bool moved = false;
+		if (!horizontalMoveDown) {
+			moved = MoveLeftUp();	
+		}
+		if (!moved) {
 			moved = MoveLeftDown(false);
-		} else {
-			moved = MoveLeftUp();
 		}
 		horizontalMoveDown = !(horizontalMoveDown && moved);
 	}
 	
 	public void MoveRight()
 	{
-		bool moved;
-		if (horizontalMoveDown) {
+		bool moved = false;
+		if (!horizontalMoveDown) {
+			moved = MoveRightUp();	
+		}
+		if (!moved) {
 			moved = MoveRightDown(false);
-		} else {
-			moved = MoveRightUp();
 		}
 		horizontalMoveDown = !(horizontalMoveDown && moved);
 	}
