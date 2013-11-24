@@ -18,7 +18,14 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 	private int figureLimit = 0;
 	private int tick = 0;
 	private int[] colors;
-	private float[][] actions;
+	private float[][] actionsArr;
+	private Pin.MobAction[] _actions;
+	public Pin.MobAction[] actions {
+		get {
+			return this._actions;
+		}
+	}
+
 	private int score = 0;
 	private bool ticking = true;
 	
@@ -107,14 +114,22 @@ public class LevelController : MonoBehaviour, Ticker.TickListener
 			}
 		}
 		
-		actions = new float[N["actions"].Count][];
+		actionsArr = new float[N["actions"].Count][];
 		for(int i = 0; i < N["actions"].Count; i++) {
-			actions[i] = new float[N["actions"][i].Count];
+			actionsArr[i] = new float[N["actions"][i].Count];
 			for(int j = 0; j < N["actions"][i].Count; j++) {
-				actions[i][j] = N["actions"][i][j].AsFloat;
+				actionsArr[i][j] = N["actions"][i][j].AsFloat;
 			}
 		}
-		pinFactory.SetActions(actions);
+		this._actions = new Pin.MobAction[actionsArr.Length];
+		for (int i = 0; i < actionsArr.Length; i++) {
+			this._actions[i] = new Pin.MobAction();
+			this._actions[i].inactiveInterval = actionsArr[i][0];
+			this._actions[i].activeInterval = actionsArr[i][1];
+			this._actions[i].chance = actionsArr[i][2];
+			this._actions[i].id = (int)actionsArr[i][3];
+			this._actions[i].parameters = ArrayUtils.SliceF(actionsArr[i], 4);
+		}
 		
 		Pin[] pinArr = pinFactory.GetPins(core.GetComponent<Figure>(), pins);
 		

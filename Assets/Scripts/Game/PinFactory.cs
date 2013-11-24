@@ -6,20 +6,6 @@ public class PinFactory : MonoBehaviour {
 	
 	public GameObject pinPrefab;
 	
-	private Pin.MobAction[] actions;
-	public void SetActions(float[][] actions)
-	{
-		this.actions = new Pin.MobAction[actions.Length];
-		for (int i = 0; i < actions.Length; i++) {
-			this.actions[i] = new Pin.MobAction();
-			this.actions[i].inactiveInterval = actions[i][0];
-			this.actions[i].activeInterval = actions[i][1];
-			this.actions[i].chance = actions[i][2];
-			this.actions[i].id = (int)actions[i][3];
-			this.actions[i].parameters = ArrayUtils.SliceF(actions[i], 4);
-		}
-	}
-	
 	public Pin[] GetPins(Figure figure, int[][] pins)
 	{
 		int[] actionIds;
@@ -52,13 +38,9 @@ public class PinFactory : MonoBehaviour {
 		pin.type  = type;
 		pin.position = position;
 		if (actionIds != null) {
-			Pin.MobAction[] tmpPinActions = new Pin.MobAction[actionIds.Length];
-			for (int i = 0; i < actionIds.Length; i++) {
-				tmpPinActions[i] = actions[actionIds[i]];
-			}
-			pin.actions = tmpPinActions;
+			pin.actions = actionIds;
 		} else {
-			pin.actions = new Pin.MobAction[0];
+			pin.actions = new int[0];
 		}
 		
 		return pin;

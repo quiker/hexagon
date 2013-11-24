@@ -41,6 +41,21 @@ public class Figure : MonoBehaviour
 		pins[pins.Length-1] = pin;
 	}
 	
+	public void RemovePin(Pin pin)
+	{
+		int n = 0;
+		foreach (Pin p in pins) {
+			if (pin == p) {
+				break;
+			}
+			n++;
+		}
+		for (int i = n; i < pins.Length - 1; i++) {
+			pins[i] = pins[i+1];
+		}
+		Array.Resize< Pin >(ref pins, pins.Length - 1);
+	}
+	
 	public int[,] GetPinsMap(bool pillsOnly = false)
 	{
 		int[,] pinsMap = new int[41,41];
@@ -128,10 +143,20 @@ public class Figure : MonoBehaviour
 	{
 		foreach (Pin pin in pins) {
 			if (position + pin.position == pos) {
-				return true;	
+				return true;
 			}
 		}
 		return false;
+	}
+	
+	public Pin GetPin(Vector2 pos)
+	{
+		foreach (Pin pin in pins) {
+			if (position + pin.position == pos) {
+				return pin;
+			}
+		}
+		return null;
 	}
 	
 	public bool isCollisionUp()

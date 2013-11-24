@@ -44,4 +44,25 @@ public class ArrayUtils
 		System.Array.Copy(array, index, result, 0, result.Length);
 		return result;
 	}
+	
+	public static bool Contains(int[] array, int val)
+	{
+		foreach (int i in array) {
+			if (i == val) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static bool Contains(float[] array, float val)
+	{
+		foreach (float i in array) {
+			if (i == val) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }
